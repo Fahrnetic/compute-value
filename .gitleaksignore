@@ -1,0 +1,10 @@
+# Reviewed false positives: public LLM benchmark profile identifier.
+src/data/apples-llm-score.test.ts:generic-api-key:19
+src/types.ts:generic-api-key:58
+src/data/pro-blackwell-benchmarks.ts:generic-api-key:219
+src/data/gpu-owner-comparison.ts:generic-api-key:98
+src/components/GpuFamilyDirectory.tsx:generic-api-key:231
+server/llm-benchmarks.ts:generic-api-key:6
+
+# Reviewed false positive: named numeric throughput calculation.
+src/data/enterprise-clusters.ts:generic-api-key:620
