@@ -45,6 +45,10 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [view]);
+
+  useEffect(() => {
     if (!catalog) return;
     let active = true;
     fetchCompatible(selection).then((result) => {
@@ -56,7 +60,6 @@ export default function App() {
   const setView = (next: View) => {
     window.location.hash = `/${next}`;
     setViewState(next);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const setSelection = (next: BuildSelection) => {

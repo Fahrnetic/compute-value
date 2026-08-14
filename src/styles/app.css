@@ -566,7 +566,7 @@ button, a, summary { transition: color .18s ease, border-color .18s ease, backgr
 
 * { box-sizing: border-box; }
 html { background: var(--ink); scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--ink); color: var(--text); }
+body { margin: 0; min-width: 0; min-height: 100vh; background: var(--ink); color: var(--text); }
 button, input, select { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { color: inherit; }
@@ -1228,6 +1228,8 @@ select { height: 40px; min-width: 135px; padding: 0 32px 0 11px; border: 1px sol
 .bandwidth-source:hover { color: var(--acid); border-color: var(--acid-deep); }
 .bandwidth-source svg { width: 12px; }
 .market-price { min-width: 0; }
+.market-price--found { position: relative; z-index: 1; }
+.market-price--found[open] { z-index: 40; }
 .market-price--missing { min-height: 42px; padding: 7px 9px; display: flex; flex-direction: column; justify-content: center; gap: 3px; color: var(--dim); border: 1px dashed var(--line); text-decoration: none; }
 .market-price--missing:hover { color: var(--text); border-color: var(--dim); }
 .market-price--missing strong { min-width: 0; font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1951,7 +1953,9 @@ footer p { margin: 0; max-width: 560px; font-size: 9px; line-height: 1.5; } foot
   .cluster-catalog__heading { grid-template-columns: 1fr; }.cluster-generation-tabs { justify-self: start; justify-content: flex-start; }
 }
 
-@media (max-width: 800px) {
+/* Match the compact data layouts to the navigation breakpoint. At common
+   820px tablet widths, the scrollbar leaves only ~805px for content. */
+@media (max-width: 920px) {
   .hashcat-heading { grid-template-columns: 22px minmax(0, 1fr); }.hashcat-heading > b { grid-column: 2; justify-self: start; white-space: normal; }.hashcat-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }.hashcat-summary > span, .hashcat-summary > span:nth-last-child(-n+3) { border-right: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }.hashcat-summary > span:nth-child(2n) { border-right: 0; }.hashcat-summary > span:last-child { grid-column: 1 / -1; border-right: 0; border-bottom: 0; }.hashcat-method { grid-template-columns: 1fr; }.hashcat-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }.hashcat-controls > p { border-left: 0; border-top: 1px solid var(--line-soft); }.hashcat-row { grid-template-columns: 36px repeat(2, minmax(0, 1fr)) 58px; }.hashcat-row > .bandwidth-rank { grid-row: 1 / 5; }.hashcat-product { grid-column: 2 / 4; }.hashcat-rate, .hashcat-value-rate, .hashcat-capacity { grid-column: 2; }.hashcat-price, .hashcat-value-score, .hashcat-benchmark { grid-column: 3; }.hashcat-sources { grid-column: 4; grid-row: 1 / 5; }
   .argon2-rating > header { grid-template-columns: 18px minmax(0, 1fr); }.argon2-rating > header > a { grid-column: 2; justify-self: start; }.argon2-rating__row { grid-template-columns: 32px repeat(2, minmax(0, 1fr)) 46px; }.argon2-rating__row > b { grid-row: 1 / 3; }.argon2-rating__row > span:first-of-type { grid-column: 2 / 4; }.argon2-rating__rate, .argon2-rating__row > span:nth-of-type(4) { grid-column: 2; }.argon2-rating__row > span:nth-of-type(3) { grid-column: 3; }.argon2-rating__sources { grid-column: 4; grid-row: 1 / 3; }.argon2-v100 { grid-template-columns: 18px minmax(0, 1fr); }.argon2-v100__estimate, .argon2-v100 > div { grid-column: 2; }.argon2-v100__estimate { padding-left: 0; padding-top: 9px; border-left: 0; border-top: 1px solid var(--line-soft); }
   .v100-field-evidence > div { grid-template-columns: repeat(2, minmax(0, 1fr)); }.v100-field-evidence > div > a { border-bottom: 1px solid var(--line-soft); }.v100-field-evidence > div > a:nth-child(2n) { border-right: 0; }.v100-field-evidence > div > a:nth-last-child(-n+2) { border-bottom: 0; }.v100-argon-audit > div { grid-template-columns: 1fr; }.v100-argon-audit > div > a, .v100-argon-audit > div > a:nth-child(2n), .v100-argon-audit > div > a:last-child { grid-column: 1; border-right: 0; border-bottom: 1px solid var(--line-soft); }.v100-argon-audit > div > a:last-child { border-bottom: 0; }.memory-hard-audit > div { grid-template-columns: 1fr; }.memory-hard-audit article, .memory-hard-audit article:nth-child(2n), .memory-hard-audit article:nth-last-child(-n+2) { border-right: 0; border-bottom: 1px solid var(--line-soft); }.memory-hard-audit article:last-child { border-bottom: 0; }
@@ -2181,7 +2185,7 @@ footer p { margin: 0; max-width: 560px; font-size: 9px; line-height: 1.5; } foot
   .bandwidth-table--llm .bandwidth-row--heading span:nth-child(7) { display: block; }
   .bandwidth-table--llm .bandwidth-row--heading span:nth-child(8) { display: none; }
   .bandwidth-product strong { font-size: 10px; }.bandwidth-value { grid-column: 3; font-size: 11px; }
-  .market-price--found summary, .market-price--missing { min-height: 40px; padding: 6px; }.market-price--found summary strong { font-size: 8px; }.market-price__menu { right: 8px; }
+  .market-price--found summary, .market-price--missing { min-height: 40px; padding: 6px; }.market-price--found summary strong { font-size: 8px; }.market-price__menu { right: 0; width: min(310px, calc(100vw - 48px)); }
   .bandwidth-method { grid-template-columns: 1fr; gap: 7px; }
   .mini-hero h1 { font-size: 52px; }.mini-hero__object { min-height: 270px; }.orbit-one { width: 340px; height: 180px; }.orbit-two { width: 270px; height: 270px; }.tops-float { right: 0; }
   .mini-toolbar { align-items: stretch; flex-direction: column; }.mini-controls { align-items: stretch; flex-direction: column; gap: 10px; }.mini-controls select { width: 100%; }
@@ -2193,7 +2197,7 @@ footer p { margin: 0; max-width: 560px; font-size: 9px; line-height: 1.5; } foot
   .cluster-verdict, .cluster-decision, .cluster-power-lab, .cluster-roofline, .model-format-lab, .cluster-pcie-lab, .cluster-house-guide, .cluster-tensor, .cluster-control, .cluster-ladder, .cluster-catalog, .cluster-method { margin-left: 9px; margin-right: 9px; }
   .cluster-decision > header, .cluster-power-lab > header, .cluster-roofline > header, .model-format-lab > header, .cluster-pcie-lab > header, .cluster-house-guide > header, .cluster-tensor > header, .cluster-control > header, .cluster-ladder > header, .cluster-catalog__heading { padding: 18px; }.cluster-decision h2, .cluster-power-lab h2, .cluster-roofline h2, .model-format-lab h2, .cluster-pcie-lab h2, .cluster-house-guide h2, .cluster-tensor h2, .cluster-control h2, .cluster-ladder h2, .cluster-catalog h2 { font-size: 24px; }
   .cluster-decision__verdicts, .cluster-decision__weights { grid-template-columns: 1fr; }.cluster-decision__verdicts article, .cluster-decision__verdicts article:nth-child(2n), .cluster-decision__weights > span, .cluster-decision__weights > span:nth-child(2n), .cluster-decision__weights > span:last-child { grid-column: 1; border-right: 0; border-bottom: 1px solid var(--line); }.cluster-decision__verdicts article:last-child, .cluster-decision__weights > span:last-child { border-bottom: 0; }
-  .cluster-decision__row { grid-template-columns: 60px minmax(0, 1fr); }.cluster-decision__route { grid-column: 2; }.cluster-decision__row > span:not(.cluster-decision__score):not(.cluster-decision__route) { grid-column: 1 / -1; padding-top: 10px; border-top: 1px solid var(--line-soft); }.cluster-decision__toolbar > span { display: none; }.cluster-decision > footer { padding: 14px; }
+  .cluster-decision__row { grid-template-columns: 60px minmax(0, 1fr); }.cluster-decision__route { grid-column: 2; }.cluster-decision__row > span:not(.cluster-decision__score):not(.cluster-decision__route) { grid-column: 1 / -1; padding-top: 10px; border-top: 1px solid var(--line-soft); }.cluster-decision__toolbar { flex-wrap: wrap; overflow-x: visible; }.cluster-decision__toolbar > span { display: none; }.cluster-decision__toolbar button { min-height: 36px; flex: 1 1 calc(50% - 7px); }.cluster-decision > footer { padding: 14px; }
   .cluster-roofline__summary { min-width: 0; width: 100%; }.cluster-roofline__contract { grid-template-columns: 1fr; }.cluster-roofline__contract > span, .cluster-roofline__contract > span:nth-child(2) { border-right: 0; border-bottom: 1px solid var(--line); }.cluster-roofline__contract > span:last-child { border-bottom: 0; }.cluster-roofline__row { grid-template-columns: 1fr; }.cluster-roofline__hardware { grid-column: 1; }.cluster-roofline > footer { padding: 14px; }
   .model-format-lab__summary { grid-template-columns: 1fr; }.model-format-lab__summary > span, .model-format-lab__summary > span:nth-child(3) { border-right: 0; border-bottom: 1px solid var(--line-soft); }.model-format-lab__summary > b { grid-column: 1; }.model-format-lab__filter button { flex: 1 1 auto; }.model-format-cluster { grid-template-columns: 18px minmax(0, 1fr); }.model-format-cluster > span, .model-format-cluster > span:nth-of-type(3), .model-format-cluster > span:nth-of-type(4), .model-format-cluster > a, .model-format-cluster > p { grid-column: 2; }.model-format-cluster > span { border-left: 0; border-top: 1px solid var(--line-soft); }.model-format-semantics > div { grid-template-columns: 1fr; }.model-format-semantics > div > span, .model-format-semantics > div > span:nth-child(2) { border-right: 0; border-bottom: 1px solid var(--line-soft); }.model-format-semantics > div > span:last-child { border-bottom: 0; }.model-format-grid { padding: 0 8px 8px; }.model-format-card > header { grid-template-columns: 18px minmax(0, 1fr); }.model-format-card > header > b { grid-column: 2; }.model-format-row { grid-template-columns: 60px minmax(0, 1fr) auto 9px; align-items: start; }.model-format-row > span:nth-child(3), .model-format-row > span:nth-child(4), .model-format-row > p { grid-column: 2 / -1; }.model-format-row > b { grid-column: 3; grid-row: 1; }.model-format-row > svg { grid-column: 4; grid-row: 1; }.cluster-pcie-lab > header > div:last-child { min-width: 0; width: 100%; }.cluster-pcie-lab__grid { padding: 8px; }.cluster-pcie-lab__stats { grid-template-columns: 1fr; }.cluster-pcie-lab__stats > span, .cluster-pcie-lab__stats > span:nth-child(2n), .cluster-pcie-lab__stats > span:nth-last-child(-n+2) { border-right: 0; border-bottom: 1px solid var(--line-soft); }.cluster-pcie-lab__stats > span:last-child { border-bottom: 0; }.cluster-pcie-lab__benchmark { grid-template-columns: 18px minmax(0, 1fr); align-items: start; }.cluster-pcie-lab__benchmark > b, .cluster-pcie-lab__benchmark > b.is-secondary { grid-column: 2; max-width: none; align-items: flex-start; text-align: left; }.cluster-pcie-lab__benchmark > b em { max-width: none; }.cluster-pcie-lab__benchmark > svg:last-child { grid-column: 2; justify-self: end; }
   .cluster-house-guide__summary { min-width: 0; width: 100%; }.cluster-house-guide__answer { grid-template-columns: 24px minmax(0, 1fr); }.cluster-house-guide__answer > b { grid-column: 2; justify-self: start; white-space: normal; }
@@ -2424,4 +2428,27 @@ select { min-height: 44px; border-radius: var(--radius-md); background-color: rg
   .gpu32-research, .model-workload-comparison, .pro-blackwell-benchmarks,
   .v100-benchmarks, .hashcat-potential) p {
   line-height: 1.65;
+}
+
+@media (max-width: 560px) {
+  .benchmark-strip {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr);
+    align-items: start;
+  }
+  .benchmark-strip > svg { grid-row: 1 / -1; }
+  .benchmark-strip > span {
+    grid-column: 2;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 3px 6px;
+  }
+  .benchmark-strip > span > small { grid-column: 1 / -1; }
+  .benchmark-strip > span > strong { grid-column: 1; }
+  .benchmark-strip > span > i { grid-column: 2; }
+}
+
+@media (max-width: 340px) {
+  .market-price__menu { right: -15px; }
+  .v100-power-point { grid-template-columns: 45px minmax(80px, 1fr) 62px; }
+  .v100-power-point > span:nth-child(4) { display: none; }
 }

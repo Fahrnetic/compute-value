@@ -14,7 +14,7 @@
   <br /><br />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-React-3178C6?style=flat-square" />
   <img alt="SQLite" src="https://img.shields.io/badge/data-SQLite-44A9D5?style=flat-square" />
-  <img alt="Private repository" src="https://img.shields.io/badge/repository-private-C8F768?style=flat-square&labelColor=101719" />
+  <img alt="Public repository" src="https://img.shields.io/badge/repository-public-C8F768?style=flat-square&labelColor=101719" />
   <img alt="Community contributions welcome" src="https://img.shields.io/badge/contributions-welcome-70E6D2?style=flat-square&labelColor=101719" />
 </div>
 
