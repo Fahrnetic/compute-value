@@ -543,7 +543,10 @@ function seedProduct(product: Product) {
             pcieSlotConfiguration: product.pcieSlotConfiguration, supportedCpuSeries: product.supportedCpuSeries,
             boardDimensionsMm: product.boardDimensionsMm, bmc: product.bmc, maxCpuTdpW: product.maxCpuTdpW,
             wifiM2Slots: product.wifiM2Slots, supportedCpuIds: product.supportedCpuIds,
-            requiredBiosByCpuId: product.requiredBiosByCpuId }));
+            requiredBiosByCpuId: product.requiredBiosByCpuId,
+            pcieSlots: product.pcieSlots, above4gDecoding: product.above4gDecoding,
+            resizableBar: product.resizableBar, iommuSupport: product.iommuSupport,
+            auxiliaryPciePower: product.auxiliaryPciePower }));
       break;
     case 'gpu':
       db.prepare(`INSERT INTO gpu_specs
@@ -565,7 +568,7 @@ function seedProduct(product: Product) {
             availability: product.availability, softwarePlatform: product.softwarePlatform,
             fp4AiTops: product.fp4AiTops, tensorCoreGeneration: product.tensorCoreGeneration,
             cudaComputeCapability: product.cudaComputeCapability,
-            parallelProcessors: gpuParallelProcessors[product.id],
+            parallelProcessors: product.parallelProcessors ?? gpuParallelProcessors[product.id],
             notes: product.notes }));
       break;
     case 'ram':
