@@ -219,3 +219,43 @@ Security-workload data in this project exists only to compare lawful hardware-co
   <br />
   <sub>Measure carefully · label uncertainty · share what you learn</sub>
 </div>
+
+<!-- dependency-credits:start -->
+## Dependencies and acknowledgments
+
+This project is built with open-source software maintained by people and communities around the world. Thank you to those maintainers and contributors. The list below covers direct package dependencies declared in this repository; lockfiles remain the source of truth for exact and transitive versions. Each dependency is governed by its own license and terms.
+
+<details>
+<summary>JavaScript / TypeScript (19)</summary>
+
+- [`@testing-library/jest-dom`](https://www.npmjs.com/package/@testing-library/jest-dom)
+- [`@testing-library/react`](https://www.npmjs.com/package/@testing-library/react)
+- [`@types/cors`](https://www.npmjs.com/package/@types/cors)
+- [`@types/express`](https://www.npmjs.com/package/@types/express)
+- [`@types/node`](https://www.npmjs.com/package/@types/node)
+- [`@types/react`](https://www.npmjs.com/package/@types/react)
+- [`@types/react-dom`](https://www.npmjs.com/package/@types/react-dom)
+- [`@vitejs/plugin-react`](https://www.npmjs.com/package/@vitejs/plugin-react)
+- [`concurrently`](https://www.npmjs.com/package/concurrently)
+- [`cors`](https://www.npmjs.com/package/cors)
+- [`express`](https://www.npmjs.com/package/express)
+- [`jsdom`](https://www.npmjs.com/package/jsdom)
+- [`lucide-react`](https://www.npmjs.com/package/lucide-react)
+- [`react`](https://www.npmjs.com/package/react)
+- [`react-dom`](https://www.npmjs.com/package/react-dom)
+- [`tsx`](https://www.npmjs.com/package/tsx)
+- [`typescript`](https://www.npmjs.com/package/typescript)
+- [`vite`](https://www.npmjs.com/package/vite)
+- [`vitest`](https://www.npmjs.com/package/vitest)
+
+</details>
+
+<details>
+<summary>Dependency declaration files (1)</summary>
+
+- [`package.json`](package.json)
+
+</details>
+
+If you redistribute this project, review the linked manifests, lockfiles, and dependency licenses for any attribution or notice requirements.
+<!-- dependency-credits:end -->
