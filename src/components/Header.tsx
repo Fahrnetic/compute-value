@@ -1,15 +1,17 @@
-import { Boxes, Cpu, Database, Gauge, Menu, Network, Server, Wrench, X } from 'lucide-react';
+import { Apple, BookOpen, Boxes, Cpu, Database, Gauge, Menu, Network, Server, Wrench, X } from 'lucide-react';
 import { useState } from 'react';
 
-export type View = 'builder' | 'catalog' | 'bandwidth' | 'clusters' | 'mini-pcs' | 'servers';
+export type View = 'builder' | 'catalog' | 'bandwidth' | 'clusters' | 'apple' | 'mini-pcs' | 'servers' | 'guide';
 
 const navigation: Array<{ view: View; label: string; note: string; icon: typeof Wrench }> = [
   { view: 'builder', label: 'Build', note: 'Compatibility', icon: Wrench },
   { view: 'catalog', label: 'Hardware', note: 'Specs & prices', icon: Database },
   { view: 'bandwidth', label: 'GPU rankings', note: 'AI performance', icon: Gauge },
   { view: 'clusters', label: 'Clusters', note: 'Scale & power', icon: Network },
+  { view: 'apple', label: 'Apple', note: '128 GB+', icon: Apple },
   { view: 'mini-pcs', label: 'Mini PCs', note: 'Small systems', icon: Cpu },
   { view: 'servers', label: 'Servers', note: 'Optane systems', icon: Server },
+  { view: 'guide', label: 'Learn', note: 'Homelab guide', icon: BookOpen },
 ];
 
 export function Header({ view, onView }: { view: View; onView: (view: View) => void }) {

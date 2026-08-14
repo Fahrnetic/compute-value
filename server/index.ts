@@ -3,8 +3,9 @@ import cors from 'cors';
 import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { BuildSelection, BuilderCategory, CatalogResponse, Category } from '../src/types.js';
+import type { BuildSelection, BuildSpec, BuilderCategory, CatalogResponse, Category } from '../src/types.js';
 import { compatibleIdsFor, validateBuild } from './compatibility.js';
+import { auditHomelabBuild, calculateModelFit, calculatePowerPlan, electricalProfiles, modelProfiles } from './homelab.js';
 import {
   db,
   dbInfo,
@@ -18,16 +19,17 @@ const app = express();
 const port = Number(process.env.PORT ?? 4174);
 const serverDir = dirname(fileURLToPath(import.meta.url));
 const distDir = resolve(serverDir, '../dist');
-const categories: Category[] = ['cpu', 'motherboard', 'gpu', 'ram', 'mini-pc', 'server-system'];
+const categories: Category[] = [
+  'cpu', 'motherboard', 'gpu', 'ram', 'mini-pc', 'server-system',
+  'psu', 'chassis', 'cooler', 'storage', 'nic', 'apple-system',
+];
 const builderCategories: BuilderCategory[] = ['cpu', 'motherboard', 'gpu', 'ram'];
 
 app.use(cors());
 app.use(express.json());
 
 app.get('/api/health', (_request, response) => {
-  const row = db.prepare('SELECT COUNT(*) AS count FROM products').get() as { count: number };
-  const serverRow = db.prepare('SELECT COUNT(*) AS count FROM server_systems').get() as { count: number };
-  response.json({ ok: true, products: row.count + serverRow.count, database: dbInfo.path });
+  response.json({ ok: true, products: getProducts().length, schemaVersion: 2, database: dbInfo.path });
 });
 
 app.get('/api/catalog', (request, response) => {
@@ -134,6 +136,59 @@ app.get('/api/compatible', (request, response) => {
   response.json({
     compatibleIds: Object.fromEntries(builderCategories.map((category) => [category, compatibleIdsFor(category, selection, products)])),
     validation: validateBuild(selection, products),
+  });
+});
+
+app.get('/api/v2/products', (request, response) => {
+  const category = typeof request.query.category === 'string' ? request.query.category : '';
+  const search = typeof request.query.search === 'string' ? request.query.search.trim().toLowerCase() : '';
+  const limit = Math.max(1, Math.min(250, Number(request.query.limit ?? 100)));
+  const offset = Math.max(0, Number(request.query.offset ?? 0));
+  let products = getProducts();
+  if (category && categories.includes(category as Category)) products = products.filter((candidate) => candidate.category === category);
+  if (search) products = products.filter((candidate) => (
+    [candidate.name, candidate.manufacturer, candidate.description, ...candidate.tags].join(' ').toLowerCase().includes(search)
+  ));
+  response.json({
+    schemaVersion: 2,
+    products: products.slice(offset, offset + limit),
+    meta: { total: products.length, limit, offset, hasMore: offset + limit < products.length },
+  });
+});
+
+app.get('/api/v2/products/:id', (request, response) => {
+  const found = getProducts().find((candidate) => candidate.id === request.params.id);
+  if (!found) { response.status(404).json({ error: 'Product not found' }); return; }
+  response.json({ schemaVersion: 2, product: found });
+});
+
+app.post('/api/v2/builds/validate', (request, response) => {
+  const spec = request.body?.spec as BuildSpec | undefined;
+  if (!spec) { response.status(400).json({ error: 'A build spec is required' }); return; }
+  response.json(auditHomelabBuild(spec, getProducts()));
+});
+
+app.post('/api/v2/model-fit', (request, response) => {
+  const spec = request.body?.spec as BuildSpec | undefined;
+  if (!spec) { response.status(400).json({ error: 'A build spec is required' }); return; }
+  response.json(calculateModelFit(spec, getProducts()));
+});
+
+app.post('/api/v2/power-plan', (request, response) => {
+  const spec = request.body?.spec as BuildSpec | undefined;
+  if (!spec) { response.status(400).json({ error: 'A build spec is required' }); return; }
+  response.json(calculatePowerPlan(spec, getProducts()));
+});
+
+app.get('/api/v2/benchmark-profiles', (_request, response) => {
+  response.json({
+    schemaVersion: 2,
+    models: modelProfiles,
+    electricalProfiles,
+    benchmarkContract: {
+      engine: 'llama.cpp', tool: 'llama-bench', promptTokens: 512, generatedTokens: 128,
+      repetitions: 5, requiredOutput: 'json', separateNativeRuntimeResults: true,
+    },
   });
 });
 

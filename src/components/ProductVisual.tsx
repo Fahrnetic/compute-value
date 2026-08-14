@@ -1,13 +1,22 @@
-import { CircuitBoard, Cpu, MemoryStick, MonitorUp, Server, Sparkles } from 'lucide-react';
+import {
+  Apple, Box, CircuitBoard, Cpu, Fan, HardDrive, MemoryStick, MonitorUp, Network,
+  Server, Sparkles, Zap,
+} from 'lucide-react';
 import type { Category } from '../types';
 
-const icons = {
+const icons: Record<Category, typeof Cpu> = {
   cpu: Cpu,
   motherboard: CircuitBoard,
   gpu: MonitorUp,
   ram: MemoryStick,
   'mini-pc': Sparkles,
   'server-system': Server,
+  psu: Zap,
+  chassis: Box,
+  cooler: Fan,
+  storage: HardDrive,
+  nic: Network,
+  'apple-system': Apple,
 };
 
 export function ProductVisual({ category, manufacturer, large = false }: { category: Category; manufacturer: string; large?: boolean }) {

@@ -7,6 +7,12 @@ export const categoryLabels: Record<Category, string> = {
   ram: 'Memory',
   'mini-pc': 'Mini AI PCs',
   'server-system': 'Optane servers',
+  psu: 'Power supplies',
+  chassis: 'Cases & chassis',
+  cooler: 'CPU coolers',
+  storage: 'Storage',
+  nic: 'Network adapters',
+  'apple-system': 'Apple systems',
 };
 
 export const categorySingular: Record<Category, string> = {
@@ -16,6 +22,12 @@ export const categorySingular: Record<Category, string> = {
   ram: 'Memory kit',
   'mini-pc': 'Mini AI PC',
   'server-system': 'Optane server',
+  psu: 'Power supply',
+  chassis: 'Case or chassis',
+  cooler: 'CPU cooler',
+  storage: 'Storage device',
+  nic: 'Network adapter',
+  'apple-system': 'Apple system',
 };
 
 export function money(cents: number) {
@@ -81,6 +93,42 @@ export function productSpecs(product: Product): Array<[string, string]> {
         ['Processors', `${product.cpuSockets}× ${product.cpuSocket}`],
         ['PCIe', `${product.pcieSlots}× Gen${product.pcieGeneration}`],
         ['Board', product.boardFormFactor],
+      ];
+    case 'psu':
+      return [
+        ['Output', `${product.continuousPowerW} W continuous`], ['Efficiency', product.efficiencyRating],
+        ['Standard', `ATX ${product.atxVersion}`], ['12V-2x6', String(product.native12v2x6Connectors)],
+        ['PCIe 8-pin', String(product.pcie8PinConnectors)], ['Input', product.inputVoltage],
+      ];
+    case 'chassis':
+      return [
+        ['Motherboards', product.formFactors.join(' / ')], ['GPU clearance', `${product.maxGpuLengthMm} mm`],
+        ['Expansion', `${product.expansionSlots} slots`], ['GPU width', `Up to ${product.maxGpuSlotWidth} slots`],
+        ['Power supplies', product.psuFormFactors.join(' / ')], ['Passive GPUs', product.passiveGpuReady ? 'Supported' : 'Active cooling required'],
+      ];
+    case 'cooler':
+      return [
+        ['Type', product.coolerType.replace('-', ' ')], ['Sockets', product.supportedSockets.join(' / ')],
+        ['Thermal capacity', `${product.thermalCapacityW} W`],
+        [product.radiatorSizeMm ? 'Radiator' : 'Height', product.radiatorSizeMm ? `${product.radiatorSizeMm} mm` : `${product.heightMm ?? 0} mm`],
+      ];
+    case 'storage':
+      return [
+        ['Capacity', `${product.capacityGb / 1000} TB`], ['Interface', product.interface],
+        ['Form factor', product.formFactor], ['Sequential read', `${product.sequentialReadMbS.toLocaleString()} MB/s`],
+        ['Endurance', product.enduranceTbw ? `${product.enduranceTbw.toLocaleString()} TBW` : 'Not listed'], ['Power', `${product.powerW} W`],
+      ];
+    case 'nic':
+      return [
+        ['Link speed', `${product.speedGbps} Gb/s`], ['Ports', String(product.ports)],
+        ['Interface', product.interface], ['Connector', product.connector],
+        ['RDMA', product.rdma ? 'Yes' : 'No'], ['Power', `${product.powerW} W`],
+      ];
+    case 'apple-system':
+      return [
+        ['Chip', product.chip], ['Unified memory', `${product.unifiedMemoryGb} GB`],
+        ['Memory bandwidth', `${product.memoryBandwidthGbS} GB/s`], ['GPU', `${product.gpuCores} cores`],
+        ['Storage', `${product.storageGb / 1000} TB`], ['Maximum system power', `${product.maxSystemPowerW} W`],
       ];
   }
 }

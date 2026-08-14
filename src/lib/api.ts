@@ -1,5 +1,5 @@
 import type { AiModelCompatibilityCatalog } from '../data/model-format-support';
-import type { BuildSelection, CatalogResponse, ValidationResult } from '../types';
+import type { BuildSelection, BuildSpec, CatalogResponse, HomelabAudit, ValidationResult } from '../types';
 
 async function json<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T> {
   const response = await fetch(input, init);
@@ -7,8 +7,8 @@ async function json<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T>
   return response.json() as Promise<T>;
 }
 
-export function fetchCatalog() {
-  return json<CatalogResponse>('/api/catalog');
+export function fetchCatalog(signal?: AbortSignal) {
+  return json<CatalogResponse>('/api/catalog', { signal });
 }
 
 export function validateSelection(selection: BuildSelection) {
@@ -27,4 +27,13 @@ export function fetchCompatible(selection: BuildSelection) {
 
 export function fetchAiModelCompatibility() {
   return json<AiModelCompatibilityCatalog>('/api/ai-model-compatibility');
+}
+
+export function fetchHomelabAudit(spec: BuildSpec, signal?: AbortSignal) {
+  return json<HomelabAudit>('/api/v2/builds/validate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ spec }),
+    signal,
+  });
 }

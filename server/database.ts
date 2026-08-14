@@ -3,6 +3,7 @@ import { mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { allProducts } from './catalog.js';
+import { homelabProducts } from './homelab-catalog.js';
 import { benchmarkSeeds, type BenchmarkSeed } from './benchmarks.js';
 import { ebaySellerRule, ebayUsedMarketSeeds, type EbayUsedMarketSeed } from './ebay-market.js';
 import { gpuParallelProcessors, llmBenchmarkSeeds, userExcludedGpuIds, type LlmBenchmarkSeed } from './llm-benchmarks.js';
@@ -1053,6 +1054,8 @@ export function getProducts(): Product[] {
       }
       case 'server-system':
         throw new Error('Server systems are stored in the dedicated server_systems table');
+      default:
+        return undefined;
     }
   });
 
@@ -1080,7 +1083,10 @@ export function getProducts(): Product[] {
     } as ServerSystem;
   });
 
-  return [...products, ...servers];
+  const definedProducts = products.filter((product): product is NonNullable<typeof product> => Boolean(product));
+  const databaseProducts = [...definedProducts, ...servers];
+  const databaseIds = new Set(databaseProducts.map((product) => product.id));
+  return [...databaseProducts, ...homelabProducts.filter((product) => !databaseIds.has(product.id))];
 }
 
 export function getAiModelCompatibilityCatalog(): AiModelCompatibilityCatalog {

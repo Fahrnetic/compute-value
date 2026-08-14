@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Fahrnetic/compute-value/data/schemas/homelab-product.schema.json",
+  "title": "Compute Value homelab catalog",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "category", "manufacturer", "name", "description", "price", "tags", "specSourceUrl"],
+    "properties": {
+      "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+      "category": {
+        "enum": ["cpu", "motherboard", "gpu", "ram", "mini-pc", "server-system", "psu", "chassis", "cooler", "storage", "nic", "apple-system"]
+      },
+      "manufacturer": { "type": "string", "minLength": 1 },
+      "name": { "type": "string", "minLength": 1 },
+      "description": { "type": "string", "minLength": 20 },
+      "tags": { "type": "array", "items": { "type": "string" }, "minItems": 1, "uniqueItems": true },
+      "specSourceUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+      "price": {
+        "type": "object",
+        "required": ["amountCents", "currency", "priceType", "retailer", "sourceUrl", "observedAt"],
+        "properties": {
+          "amountCents": { "type": "integer", "minimum": 0 },
+          "currency": { "const": "USD" },
+          "priceType": { "enum": ["MSRP", "store", "reference"] },
+          "retailer": { "type": "string", "minLength": 1 },
+          "sourceUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+          "observedAt": { "type": "string", "format": "date" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "additionalProperties": true
+  }
+}

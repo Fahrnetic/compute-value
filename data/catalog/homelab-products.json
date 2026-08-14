@@ -1,0 +1,259 @@
+[
+  {
+    "id": "intel-xeon-698x", "category": "cpu", "manufacturer": "Intel", "name": "Xeon 698X",
+    "description": "86-core Xeon 600 workstation host with 128 PCIe 5.0 lanes for dense multi-GPU systems.",
+    "price": { "amountCents": 749900, "currency": "USD", "priceType": "reference", "retailer": "Intel reference", "sourceUrl": "https://www.intel.com/content/www/us/en/products/details/processors/xeon.html", "observedAt": "2026-08-13" },
+    "tags": ["workstation", "multi-gpu", "pcie-5", "ecc"], "specSourceUrl": "https://www.intel.com/content/www/us/en/products/details/processors/xeon.html",
+    "socket": "LGA4710-2", "cores": 86, "threads": 172, "boostClockGhz": 4.8, "basePowerW": 350, "memoryTypes": ["DDR5"], "integratedGraphics": false,
+    "architecture": "Granite Rapids-W", "series": "Xeon 600 Workstation", "memoryChannels": 8, "maxMemoryGb": 4096, "memorySpeedMt": 6400,
+    "memoryModuleTypes": ["ECC RDIMM"], "eccSupport": true, "pcieGeneration": 5, "pcieLanes": 128, "pcieUsableLanes": 128, "serverOnly": false, "launchDate": "2026-03-01"
+  },
+  {
+    "id": "intel-xeon-676x", "category": "cpu", "manufacturer": "Intel", "name": "Xeon 676X",
+    "description": "32-core Xeon 600 workstation CPU balancing PCIe expansion and platform cost.",
+    "price": { "amountCents": 329900, "currency": "USD", "priceType": "reference", "retailer": "Intel reference", "sourceUrl": "https://www.intel.com/content/www/us/en/products/details/processors/xeon.html", "observedAt": "2026-08-13" },
+    "tags": ["workstation", "multi-gpu", "pcie-5"], "specSourceUrl": "https://www.intel.com/content/www/us/en/products/details/processors/xeon.html",
+    "socket": "LGA4710-2", "cores": 32, "threads": 64, "boostClockGhz": 4.9, "basePowerW": 275, "memoryTypes": ["DDR5"], "integratedGraphics": false,
+    "architecture": "Granite Rapids-W", "series": "Xeon 600 Workstation", "memoryChannels": 8, "maxMemoryGb": 4096, "memorySpeedMt": 6400,
+    "memoryModuleTypes": ["ECC RDIMM"], "eccSupport": true, "pcieGeneration": 5, "pcieLanes": 128, "pcieUsableLanes": 128, "serverOnly": false, "launchDate": "2026-03-01"
+  },
+  {
+    "id": "amd-threadripper-9980x", "category": "cpu", "manufacturer": "AMD", "name": "Ryzen Threadripper 9980X",
+    "description": "64-core Zen 5 HEDT processor with 80 usable PCIe 5.0 lanes on TRX50.",
+    "price": { "amountCents": 499900, "currency": "USD", "priceType": "MSRP", "retailer": "AMD reference", "sourceUrl": "https://www.amd.com/en/products/processors/workstations/ryzen-threadripper.html", "observedAt": "2026-08-13" },
+    "tags": ["hedt", "multi-gpu", "pcie-5"], "specSourceUrl": "https://www.amd.com/en/products/processors/workstations/ryzen-threadripper.html",
+    "socket": "sTR5", "cores": 64, "threads": 128, "boostClockGhz": 5.4, "basePowerW": 350, "memoryTypes": ["DDR5"], "integratedGraphics": false,
+    "architecture": "Zen 5", "series": "Threadripper 9000", "memoryChannels": 4, "maxMemoryGb": 1024, "memorySpeedMt": 6400,
+    "memoryModuleTypes": ["ECC RDIMM"], "eccSupport": true, "pcieGeneration": 5, "pcieLanes": 88, "pcieUsableLanes": 80, "serverOnly": false, "launchDate": "2025-07-31"
+  },
+  {
+    "id": "amd-epyc-9655p", "category": "cpu", "manufacturer": "AMD", "name": "EPYC 9655P",
+    "description": "Single-socket 96-core SP5 processor with twelve memory channels and 128 PCIe 5.0 lanes.",
+    "price": { "amountCents": 1180500, "currency": "USD", "priceType": "reference", "retailer": "AMD reference", "sourceUrl": "https://www.amd.com/en/products/processors/server/epyc/9005-series/amd-epyc-9655.html", "observedAt": "2026-08-13" },
+    "tags": ["server", "sp5", "multi-gpu", "twelve-channel"], "specSourceUrl": "https://www.amd.com/en/products/processors/server/epyc/9005-series/amd-epyc-9655.html",
+    "socket": "SP5", "cores": 96, "threads": 192, "boostClockGhz": 4.5, "basePowerW": 400, "memoryTypes": ["DDR5"], "integratedGraphics": false,
+    "architecture": "Zen 5", "series": "EPYC 9005", "memoryChannels": 12, "maxMemoryGb": 6144, "memorySpeedMt": 6000,
+    "memoryModuleTypes": ["ECC RDIMM", "3DS RDIMM"], "eccSupport": true, "pcieGeneration": 5, "pcieLanes": 128, "pcieUsableLanes": 128, "serverOnly": false, "launchDate": "2024-10-10"
+  },
+  {
+    "id": "asus-pro-ws-w890-sage", "category": "motherboard", "manufacturer": "ASUS", "name": "Pro WS W890-SAGE",
+    "description": "Four CPU-direct PCIe 5.0 x16 slots, 4 TB ECC RDIMM support, 10GbE and dual-PSU readiness.",
+    "price": { "amountCents": 129999, "currency": "USD", "priceType": "reference", "retailer": "ASUS reference", "sourceUrl": "https://www.asus.com/us/motherboards-components/motherboards/workstation/pro-ws-w890-sage/", "observedAt": "2026-08-13" },
+    "tags": ["w890", "four-gpu", "10gbe", "workstation"], "specSourceUrl": "https://www.asus.com/us/motherboards-components/motherboards/workstation/pro-ws-w890-sage/techspec/",
+    "socket": "LGA4710-2", "chipset": "W890", "formFactor": "CEB", "memoryType": "DDR5", "memorySlots": 8, "maxMemoryGb": 4096, "pcieX16Slots": 5, "m2Slots": 4, "wifi": false,
+    "memoryChannels": 8, "eccSupport": true, "registeredMemorySupport": true, "registeredMemoryRequired": true, "pcieGeneration": 5, "platformPcieLanes": 152,
+    "networkPorts": ["10GbE", "2.5GbE"], "bmc": "Management-ready", "above4gDecoding": true, "resizableBar": true, "iommuSupport": true,
+    "pcieSlots": [
+      { "id": "slot1", "label": "PCIEX16(G5)_1", "generation": 5, "physicalLanes": 16, "electricalLanes": 16, "source": "cpu", "position": 1, "spacingSlots": 2 },
+      { "id": "slot2", "label": "PCIEX16(G5)_2", "generation": 5, "physicalLanes": 16, "electricalLanes": 16, "source": "cpu", "position": 3, "spacingSlots": 2 },
+      { "id": "slot3", "label": "PCIEX16(G5)_3", "generation": 5, "physicalLanes": 16, "electricalLanes": 16, "source": "cpu", "position": 5, "spacingSlots": 2 },
+      { "id": "slot4", "label": "PCIEX16(G5)_4", "generation": 5, "physicalLanes": 16, "electricalLanes": 16, "source": "cpu", "position": 7, "spacingSlots": 2 },
+      { "id": "slot5", "label": "PCIEX16(G4)", "generation": 4, "physicalLanes": 16, "electricalLanes": 4, "source": "chipset", "position": 9, "spacingSlots": 1 }
+    ]
+  },
+  {
+    "id": "asus-pro-ws-trx50-sage-wifi", "category": "motherboard", "manufacturer": "ASUS", "name": "Pro WS TRX50-SAGE WIFI",
+    "description": "Three PCIe 5.0 x16 expansion slots for Threadripper 7000/9000 and PRO processors.",
+    "price": { "amountCents": 89999, "currency": "USD", "priceType": "reference", "retailer": "ASUS reference", "sourceUrl": "https://www.asus.com/us/motherboards-components/motherboards/workstation/pro-ws-trx50-sage-wifi/", "observedAt": "2026-08-13" },
+    "tags": ["trx50", "three-gpu", "workstation"], "specSourceUrl": "https://www.asus.com/us/motherboards-components/motherboards/workstation/pro-ws-trx50-sage-wifi/techspec/",
+    "socket": "sTR5", "chipset": "TRX50", "formFactor": "CEB", "memoryType": "DDR5", "memorySlots": 4, "maxMemoryGb": 1024, "pcieX16Slots": 3, "m2Slots": 3, "wifi": true,
+    "memoryChannels": 4, "eccSupport": true, "registeredMemorySupport": true, "registeredMemoryRequired": true, "pcieGeneration": 5, "platformPcieLanes": 92,
+    "networkPorts": ["10GbE", "2.5GbE"], "above4gDecoding": true, "resizableBar": true, "iommuSupport": true,
+    "pcieSlots": [
+      { "id": "slot1", "label": "PCIEX16(G5)_1", "generation": 5, "physicalLanes": 16, "electricalLanes": 16, "source": "cpu", "position": 1, "spacingSlots": 3 },
+      { "id": "slot2", "label": "PCIEX16(G5)_2", "generation": 5, "physicalLanes": 16, "electricalLanes": 16, "source": "cpu", "position": 4, "spacingSlots": 2 },
+      { "id": "slot3", "label": "PCIEX16(G5)_3", "generation": 5, "physicalLanes": 16, "electricalLanes": 16, "source": "cpu", "position": 6, "spacingSlots": 2 }
+    ]
+  },
+  {
+    "id": "supermicro-h13ssl-nt", "category": "motherboard", "manufacturer": "Supermicro", "name": "H13SSL-NT",
+    "description": "Single-socket SP5 server board with twelve DDR5 channels, BMC and three PCIe 5.0 x16 slots.",
+    "price": { "amountCents": 94999, "currency": "USD", "priceType": "reference", "retailer": "Supermicro reference", "sourceUrl": "https://www.supermicro.com/en/products/motherboard/h13ssl-nt", "observedAt": "2026-08-13" },
+    "tags": ["sp5", "server", "bmc", "three-gpu"], "specSourceUrl": "https://www.supermicro.com/manuals/motherboard/H13/MNL-2545.pdf",
+    "socket": "SP5", "chipset": "SoC", "formFactor": "ATX", "memoryType": "DDR5", "memorySlots": 12, "maxMemoryGb": 4608, "pcieX16Slots": 3, "m2Slots": 2, "wifi": false,
+    "memoryChannels": 12, "eccSupport": true, "registeredMemorySupport": true, "registeredMemoryRequired": true, "pcieGeneration": 5, "platformPcieLanes": 128,
+    "networkPorts": ["Dual 10GbE"], "bmc": "AST2600 IPMI", "above4gDecoding": true, "iommuSupport": true,
+    "pcieSlots": [
+      { "id": "slot1", "label": "Slot 1", "generation": 5, "physicalLanes": 16, "electricalLanes": 16, "source": "cpu", "position": 1, "spacingSlots": 2 },
+      { "id": "slot2", "label": "Slot 2", "generation": 5, "physicalLanes": 16, "electricalLanes": 16, "source": "cpu", "position": 3, "spacingSlots": 2 },
+      { "id": "slot3", "label": "Slot 3", "generation": 5, "physicalLanes": 16, "electricalLanes": 16, "source": "cpu", "position": 5, "spacingSlots": 2 }
+    ]
+  },
+  {
+    "id": "asus-pro-ws-w790e-sage-se", "category": "motherboard", "manufacturer": "ASUS", "name": "Pro WS W790E-SAGE SE",
+    "description": "Seven-slot W790 workstation board for Xeon W-2400/W-2500/W-3400/W-3500 multi-GPU hosts.",
+    "price": { "amountCents": 119999, "currency": "USD", "priceType": "reference", "retailer": "ASUS reference", "sourceUrl": "https://www.asus.com/us/motherboards-components/motherboards/workstation/pro-ws-w790e-sage-se/", "observedAt": "2026-08-13" },
+    "tags": ["w790", "seven-slot", "workstation", "bmc"], "specSourceUrl": "https://www.asus.com/us/motherboards-components/motherboards/workstation/pro-ws-w790e-sage-se/techspec/",
+    "socket": "LGA4677", "chipset": "W790", "formFactor": "EEB", "memoryType": "DDR5", "memorySlots": 8, "maxMemoryGb": 2048, "pcieX16Slots": 7, "m2Slots": 3, "wifi": false,
+    "memoryChannels": 8, "eccSupport": true, "registeredMemorySupport": true, "registeredMemoryRequired": true, "pcieGeneration": 5, "platformPcieLanes": 128,
+    "networkPorts": ["Dual 10GbE", "BMC"], "bmc": "AST2600 IPMI", "above4gDecoding": true, "resizableBar": true, "iommuSupport": true,
+    "pcieSlots": [
+      { "id": "slot1", "label": "Slot 1", "generation": 5, "physicalLanes": 16, "electricalLanes": 16, "source": "cpu", "position": 1, "spacingSlots": 2 },
+      { "id": "slot2", "label": "Slot 2", "generation": 5, "physicalLanes": 16, "electricalLanes": 16, "source": "cpu", "position": 3, "spacingSlots": 2 },
+      { "id": "slot3", "label": "Slot 3", "generation": 5, "physicalLanes": 16, "electricalLanes": 16, "source": "cpu", "position": 5, "spacingSlots": 2 },
+      { "id": "slot4", "label": "Slot 4", "generation": 5, "physicalLanes": 16, "electricalLanes": 16, "source": "cpu", "position": 7, "spacingSlots": 2 }
+    ]
+  },
+  {
+    "id": "kingston-256gb-ddr5-6400-rdimm", "category": "ram", "manufacturer": "Kingston", "name": "Server Premier 256 GB DDR5-6400 RDIMM Kit",
+    "description": "Four-module ECC RDIMM population for TRX50 and workstation platforms.",
+    "price": { "amountCents": 139999, "currency": "USD", "priceType": "reference", "retailer": "Kingston reference", "sourceUrl": "https://www.kingston.com/en/memory/server-premier/ddr5-6400mts-ecc-registered-dimm", "observedAt": "2026-08-13" },
+    "tags": ["ecc", "rdimm", "workstation"], "specSourceUrl": "https://www.kingston.com/en/memory/server-premier/ddr5-6400mts-ecc-registered-dimm",
+    "memoryType": "DDR5", "capacityGb": 256, "modules": 4, "speedMt": 6400, "casLatency": 52, "profile": "JEDEC", "registered": true, "ecc": true
+  },
+  {
+    "id": "kingston-512gb-ddr5-6400-rdimm", "category": "ram", "manufacturer": "Kingston", "name": "Server Premier 512 GB DDR5-6400 RDIMM Kit",
+    "description": "Eight-module ECC RDIMM population for eight-channel workstation platforms.",
+    "price": { "amountCents": 279999, "currency": "USD", "priceType": "reference", "retailer": "Kingston reference", "sourceUrl": "https://www.kingston.com/en/memory/server-premier/ddr5-6400mts-ecc-registered-dimm", "observedAt": "2026-08-13" },
+    "tags": ["ecc", "rdimm", "eight-channel"], "specSourceUrl": "https://www.kingston.com/en/memory/server-premier/ddr5-6400mts-ecc-registered-dimm",
+    "memoryType": "DDR5", "capacityGb": 512, "modules": 8, "speedMt": 6400, "casLatency": 52, "profile": "JEDEC", "registered": true, "ecc": true
+  },
+  {
+    "id": "corsair-rm1000x-atx31", "category": "psu", "manufacturer": "Corsair", "name": "RM1000x ATX 3.1",
+    "description": "Quiet 1000 W ATX 3.1 supply for a high-end single-GPU AI workstation.",
+    "price": { "amountCents": 21999, "currency": "USD", "priceType": "store", "retailer": "Corsair", "sourceUrl": "https://www.corsair.com/us/en/p/psu/cp-9020271-na/rmx-series-rm1000x-fully-modular-power-supply-cp-9020271-na", "observedAt": "2026-08-13" },
+    "tags": ["atx-3.1", "single-gpu", "12v-2x6"], "specSourceUrl": "https://www.corsair.com/us/en/p/psu/cp-9020271-na/rmx-series-rm1000x-fully-modular-power-supply-cp-9020271-na",
+    "continuousPowerW": 1000, "peakPowerW": 2000, "efficiencyRating": "80 Plus Gold", "atxVersion": "3.1", "formFactor": "ATX", "inputVoltage": "100-240 V", "pcie8PinConnectors": 6, "native12v2x6Connectors": 1, "eps8PinConnectors": 2
+  },
+  {
+    "id": "corsair-hx1500i", "category": "psu", "manufacturer": "Corsair", "name": "HX1500i",
+    "description": "1500 W Platinum supply for dual-GPU workstations on an appropriate dedicated circuit.",
+    "price": { "amountCents": 39999, "currency": "USD", "priceType": "store", "retailer": "Corsair", "sourceUrl": "https://www.corsair.com/us/en/p/psu/cp-9020261-na/hxi-series-hx1500i-fully-modular-ultra-low-noise-platinum-atx-1500-watt-pc-power-supply-cp-9020261-na", "observedAt": "2026-08-13" },
+    "tags": ["atx-3.1", "dual-gpu", "platinum"], "specSourceUrl": "https://www.corsair.com/us/en/p/psu/cp-9020261-na/hxi-series-hx1500i-fully-modular-ultra-low-noise-platinum-atx-1500-watt-pc-power-supply-cp-9020261-na",
+    "continuousPowerW": 1500, "peakPowerW": 3000, "efficiencyRating": "80 Plus Platinum", "atxVersion": "3.1", "formFactor": "ATX", "inputVoltage": "100-240 V", "pcie8PinConnectors": 8, "native12v2x6Connectors": 2, "eps8PinConnectors": 2
+  },
+  {
+    "id": "bequiet-dark-power-pro-13-1600", "category": "psu", "manufacturer": "be quiet!", "name": "Dark Power Pro 13 1600W",
+    "description": "1600 W Titanium ATX 3.0 supply for power-limited dual-GPU systems.",
+    "price": { "amountCents": 45999, "currency": "USD", "priceType": "reference", "retailer": "be quiet!", "sourceUrl": "https://www.bequiet.com/en/powersupply/4396", "observedAt": "2026-08-13" },
+    "tags": ["atx-3.0", "dual-gpu", "titanium"], "specSourceUrl": "https://www.bequiet.com/en/powersupply/4396",
+    "continuousPowerW": 1600, "peakPowerW": 3200, "efficiencyRating": "80 Plus Titanium", "atxVersion": "3.0", "formFactor": "ATX", "inputVoltage": "100-240 V", "pcie8PinConnectors": 6, "native12v2x6Connectors": 2, "eps8PinConnectors": 2
+  },
+  {
+    "id": "silverstone-hela-2050r", "category": "psu", "manufacturer": "SilverStone", "name": "HELA 2050R Platinum",
+    "description": "2050 W high-output supply intended for 200-240 V multi-GPU workstations.",
+    "price": { "amountCents": 64999, "currency": "USD", "priceType": "reference", "retailer": "SilverStone", "sourceUrl": "https://www.silverstonetek.com/en/product/info/power-supplies/HELA2050RPlatinum/", "observedAt": "2026-08-13" },
+    "tags": ["multi-gpu", "240v", "platinum"], "specSourceUrl": "https://www.silverstonetek.com/en/product/info/power-supplies/HELA2050RPlatinum/",
+    "continuousPowerW": 2050, "peakPowerW": 4100, "efficiencyRating": "80 Plus Platinum", "atxVersion": "3.0", "formFactor": "ATX", "inputVoltage": "200-240 V for full output", "pcie8PinConnectors": 12, "native12v2x6Connectors": 2, "eps8PinConnectors": 2
+  },
+  {
+    "id": "fractal-meshify-2-xl", "category": "chassis", "manufacturer": "Fractal Design", "name": "Meshify 2 XL",
+    "description": "Large high-airflow tower with E-ATX/EEB support and nine expansion slots.",
+    "price": { "amountCents": 22999, "currency": "USD", "priceType": "reference", "retailer": "Fractal Design", "sourceUrl": "https://www.fractal-design.com/products/cases/meshify/meshify-2-xl/", "observedAt": "2026-08-13" },
+    "tags": ["full-tower", "airflow", "multi-gpu"], "specSourceUrl": "https://www.fractal-design.com/products/cases/meshify/meshify-2-xl/",
+    "formFactors": ["Mini ITX", "Micro ATX", "ATX", "E-ATX", "EEB"], "maxGpuLengthMm": 549, "expansionSlots": 9, "maxGpuSlotWidth": 4, "psuFormFactors": ["ATX"], "passiveGpuReady": false, "radiatorSupportMm": [280, 360, 420, 480]
+  },
+  {
+    "id": "corsair-7000d-airflow", "category": "chassis", "manufacturer": "Corsair", "name": "7000D AIRFLOW",
+    "description": "Full tower with eight horizontal slots and broad radiator support.",
+    "price": { "amountCents": 26999, "currency": "USD", "priceType": "reference", "retailer": "Corsair", "sourceUrl": "https://www.corsair.com/us/en/p/pc-cases/cc-9011218-ww/7000d-airflow-full-tower-atx-pc-case-black-cc-9011218-ww", "observedAt": "2026-08-13" },
+    "tags": ["full-tower", "airflow"], "specSourceUrl": "https://www.corsair.com/us/en/p/pc-cases/cc-9011218-ww/7000d-airflow-full-tower-atx-pc-case-black-cc-9011218-ww",
+    "formFactors": ["Mini ITX", "Micro ATX", "ATX", "E-ATX"], "maxGpuLengthMm": 450, "expansionSlots": 8, "maxGpuSlotWidth": 4, "psuFormFactors": ["ATX"], "passiveGpuReady": false, "radiatorSupportMm": [280, 360, 420, 480]
+  },
+  {
+    "id": "phanteks-enthoo-pro-2", "category": "chassis", "manufacturer": "Phanteks", "name": "Enthoo Pro 2",
+    "description": "High-capacity tower with eleven expansion slots and SSI-EEB support.",
+    "price": { "amountCents": 18999, "currency": "USD", "priceType": "reference", "retailer": "Phanteks", "sourceUrl": "https://phanteks.com/product/enthoo-pro-2-closed-panel-black/", "observedAt": "2026-08-13" },
+    "tags": ["eleven-slot", "multi-gpu", "eeB"], "specSourceUrl": "https://phanteks.com/product/enthoo-pro-2-closed-panel-black/",
+    "formFactors": ["Mini ITX", "Micro ATX", "ATX", "E-ATX", "EEB"], "maxGpuLengthMm": 503, "expansionSlots": 11, "maxGpuSlotWidth": 4, "psuFormFactors": ["ATX"], "passiveGpuReady": false, "radiatorSupportMm": [280, 360, 420, 480]
+  },
+  {
+    "id": "silverstone-rm52", "category": "chassis", "manufacturer": "SilverStone", "name": "RM52",
+    "description": "5U rackmount chassis designed for large workstation boards and GPU cooling.",
+    "price": { "amountCents": 54999, "currency": "USD", "priceType": "reference", "retailer": "SilverStone", "sourceUrl": "https://www.silverstonetek.com/en/product/info/server-nas/RM52/", "observedAt": "2026-08-13" },
+    "tags": ["rackmount", "5u", "server-airflow"], "specSourceUrl": "https://www.silverstonetek.com/en/product/info/server-nas/RM52/",
+    "formFactors": ["Micro ATX", "ATX", "CEB", "E-ATX", "EEB"], "maxGpuLengthMm": 424, "expansionSlots": 8, "maxGpuSlotWidth": 2, "psuFormFactors": ["ATX", "server"], "rackUnits": 5, "passiveGpuReady": true, "radiatorSupportMm": [240]
+  },
+  {
+    "id": "noctua-nh-u14s-tr5-sp6", "category": "cooler", "manufacturer": "Noctua", "name": "NH-U14S TR5-SP6",
+    "description": "Purpose-built air cooler for sTR5 and SP6 workstation processors.",
+    "price": { "amountCents": 12990, "currency": "USD", "priceType": "reference", "retailer": "Noctua", "sourceUrl": "https://noctua.at/en/nh-u14s-tr5-sp6", "observedAt": "2026-08-13" },
+    "tags": ["str5", "sp6", "air"], "specSourceUrl": "https://noctua.at/en/nh-u14s-tr5-sp6",
+    "coolerType": "air", "supportedSockets": ["sTR5", "SP6"], "thermalCapacityW": 350, "heightMm": 165
+  },
+  {
+    "id": "arctic-freezer-4u-m", "category": "cooler", "manufacturer": "ARCTIC", "name": "Freezer 4U-M",
+    "description": "Server-style cooler supporting SP5, sTR5 and multiple workstation sockets.",
+    "price": { "amountCents": 7999, "currency": "USD", "priceType": "reference", "retailer": "ARCTIC", "sourceUrl": "https://www.arctic.de/en/Freezer-4U-M/ACFRE00133A", "observedAt": "2026-08-13" },
+    "tags": ["sp5", "str5", "server"], "specSourceUrl": "https://www.arctic.de/en/Freezer-4U-M/ACFRE00133A",
+    "coolerType": "server-air", "supportedSockets": ["SP3", "SP5", "SP6", "sTRX4", "sWRX8", "sTR5"], "thermalCapacityW": 500, "heightMm": 145
+  },
+  {
+    "id": "noctua-nh-d15-g2", "category": "cooler", "manufacturer": "Noctua", "name": "NH-D15 G2",
+    "description": "Premium desktop air cooler for AM4, AM5 and modern Intel sockets.",
+    "price": { "amountCents": 14990, "currency": "USD", "priceType": "reference", "retailer": "Noctua", "sourceUrl": "https://noctua.at/en/nh-d15-g2", "observedAt": "2026-08-13" },
+    "tags": ["desktop", "quiet", "air"], "specSourceUrl": "https://noctua.at/en/nh-d15-g2",
+    "coolerType": "air", "supportedSockets": ["AM4", "AM5", "LGA1700", "LGA1851"], "thermalCapacityW": 250, "heightMm": 168
+  },
+  {
+    "id": "samsung-990-pro-4tb", "category": "storage", "manufacturer": "Samsung", "name": "990 PRO 4 TB",
+    "description": "High-end PCIe 4.0 NVMe drive for a substantial local model library.",
+    "price": { "amountCents": 32999, "currency": "USD", "priceType": "reference", "retailer": "Samsung", "sourceUrl": "https://semiconductor.samsung.com/consumer-storage/internal-ssd/990-pro/", "observedAt": "2026-08-13" },
+    "tags": ["nvme", "model-library", "4tb"], "specSourceUrl": "https://semiconductor.samsung.com/consumer-storage/internal-ssd/990-pro/",
+    "capacityGb": 4000, "interface": "PCIe 4.0 x4 NVMe", "formFactor": "M.2 2280", "sequentialReadMbS": 7450, "enduranceTbw": 2400, "powerW": 8.5
+  },
+  {
+    "id": "crucial-t705-4tb", "category": "storage", "manufacturer": "Crucial", "name": "T705 4 TB",
+    "description": "PCIe 5.0 NVMe drive emphasizing fast model loading and scratch I/O.",
+    "price": { "amountCents": 44999, "currency": "USD", "priceType": "reference", "retailer": "Crucial", "sourceUrl": "https://www.crucial.com/ssd/t705/ct4000t705ssd3", "observedAt": "2026-08-13" },
+    "tags": ["nvme", "pcie-5", "4tb"], "specSourceUrl": "https://www.crucial.com/ssd/t705/ct4000t705ssd3",
+    "capacityGb": 4000, "interface": "PCIe 5.0 x4 NVMe", "formFactor": "M.2 2280", "sequentialReadMbS": 14100, "enduranceTbw": 2400, "powerW": 12.3
+  },
+  {
+    "id": "nvidia-connectx-5-100gbe", "category": "nic", "manufacturer": "NVIDIA", "name": "ConnectX-5 100GbE",
+    "description": "Used-market 100GbE/RDMA adapter for multi-node inference experiments.",
+    "price": { "amountCents": 18900, "currency": "USD", "priceType": "reference", "retailer": "Used-market reference", "sourceUrl": "https://www.nvidia.com/en-us/networking/ethernet/connectx-5/", "observedAt": "2026-08-13" },
+    "tags": ["100gbe", "rdma", "cluster"], "specSourceUrl": "https://www.nvidia.com/en-us/networking/ethernet/connectx-5/",
+    "speedGbps": 100, "ports": 2, "interface": "PCIe 3.0 x16", "pcieGeneration": 3, "pcieLanes": 16, "powerW": 25, "connector": "QSFP28", "rdma": true
+  },
+  {
+    "id": "intel-x710-t2l", "category": "nic", "manufacturer": "Intel", "name": "Ethernet Network Adapter X710-T2L",
+    "description": "Dual-port 10GBase-T adapter for practical homelab networking.",
+    "price": { "amountCents": 32900, "currency": "USD", "priceType": "reference", "retailer": "Intel reference", "sourceUrl": "https://www.intel.com/content/www/us/en/products/sku/189760/intel-ethernet-network-adapter-x710t2l/specifications.html", "observedAt": "2026-08-13" },
+    "tags": ["10gbe", "rj45", "homelab"], "specSourceUrl": "https://www.intel.com/content/www/us/en/products/sku/189760/intel-ethernet-network-adapter-x710t2l/specifications.html",
+    "speedGbps": 10, "ports": 2, "interface": "PCIe 3.0 x8", "pcieGeneration": 3, "pcieLanes": 8, "powerW": 18, "connector": "RJ45", "rdma": false
+  },
+  {
+    "id": "apple-macbook-pro-m5-max-128", "category": "apple-system", "manufacturer": "Apple", "name": "MacBook Pro 16-inch M5 Max 128 GB",
+    "description": "Portable 128 GB unified-memory system with a 40-core GPU and 614 GB/s published bandwidth.",
+    "price": { "amountCents": 499900, "currency": "USD", "priceType": "reference", "retailer": "Apple", "sourceUrl": "https://www.apple.com/shop/buy-mac/macbook-pro", "observedAt": "2026-08-13" },
+    "tags": ["portable", "metal", "128gb", "unified-memory"], "specSourceUrl": "https://www.apple.com/macbook-pro/specs/",
+    "systemClass": "portable", "chip": "M5 Max", "cpuCores": 18, "gpuCores": 40, "unifiedMemoryGb": 128, "memoryBandwidthGbS": 614, "storageGb": 2000, "maxSystemPowerW": 140, "upgradeable": false,
+    "universalLlama2": { "promptTokensPerSecond": 990.53, "generatedTokensPerSecond": 104.03, "evidence": "measured-public", "sourceUrl": "https://github.com/ggml-org/llama.cpp/discussions/4167" }
+  },
+  {
+    "id": "apple-macbook-pro-m4-max-128", "category": "apple-system", "manufacturer": "Apple", "name": "MacBook Pro 16-inch M4 Max 128 GB",
+    "description": "Previous-generation portable unified-memory system with 128 GB and 546 GB/s bandwidth.",
+    "price": { "amountCents": 359900, "currency": "USD", "priceType": "reference", "retailer": "Used-market reference", "sourceUrl": "https://support.apple.com/en-us/121554", "observedAt": "2026-08-13" },
+    "tags": ["portable", "metal", "128gb", "used"], "specSourceUrl": "https://support.apple.com/en-us/121554",
+    "systemClass": "portable", "chip": "M4 Max", "cpuCores": 16, "gpuCores": 40, "unifiedMemoryGb": 128, "memoryBandwidthGbS": 546, "storageGb": 2000, "maxSystemPowerW": 140, "upgradeable": false
+  },
+  {
+    "id": "apple-mac-studio-m4-max-128", "category": "apple-system", "manufacturer": "Apple", "name": "Mac Studio M4 Max 128 GB",
+    "description": "Compact desktop with 128 GB unified memory and 546 GB/s bandwidth.",
+    "price": { "amountCents": 369900, "currency": "USD", "priceType": "reference", "retailer": "Apple", "sourceUrl": "https://www.apple.com/shop/buy-mac/mac-studio", "observedAt": "2026-08-13" },
+    "tags": ["desktop", "metal", "128gb", "quiet"], "specSourceUrl": "https://support.apple.com/en-us/122211",
+    "systemClass": "desktop", "chip": "M4 Max", "cpuCores": 16, "gpuCores": 40, "unifiedMemoryGb": 128, "memoryBandwidthGbS": 546, "storageGb": 1000, "maxSystemPowerW": 480, "upgradeable": false
+  },
+  {
+    "id": "apple-mac-studio-m3-ultra-256", "category": "apple-system", "manufacturer": "Apple", "name": "Mac Studio M3 Ultra 256 GB",
+    "description": "High-memory desktop configuration with an 80-core GPU and 819 GB/s bandwidth.",
+    "price": { "amountCents": 799900, "currency": "USD", "priceType": "reference", "retailer": "Apple", "sourceUrl": "https://www.apple.com/shop/buy-mac/mac-studio", "observedAt": "2026-08-13" },
+    "tags": ["desktop", "metal", "256gb", "unified-memory"], "specSourceUrl": "https://support.apple.com/en-us/122211",
+    "systemClass": "desktop", "chip": "M3 Ultra", "cpuCores": 32, "gpuCores": 80, "unifiedMemoryGb": 256, "memoryBandwidthGbS": 819, "storageGb": 2000, "maxSystemPowerW": 480, "upgradeable": false
+  },
+  {
+    "id": "apple-mac-studio-m3-ultra-512", "category": "apple-system", "manufacturer": "Apple", "name": "Mac Studio M3 Ultra 512 GB",
+    "description": "Maximum-memory Apple desktop for very large quantized models, with 819 GB/s bandwidth.",
+    "price": { "amountCents": 1199900, "currency": "USD", "priceType": "reference", "retailer": "Apple", "sourceUrl": "https://www.apple.com/shop/buy-mac/mac-studio", "observedAt": "2026-08-13" },
+    "tags": ["desktop", "metal", "512gb", "large-models"], "specSourceUrl": "https://support.apple.com/en-us/122211",
+    "systemClass": "desktop", "chip": "M3 Ultra", "cpuCores": 32, "gpuCores": 80, "unifiedMemoryGb": 512, "memoryBandwidthGbS": 819, "storageGb": 4000, "maxSystemPowerW": 480, "upgradeable": false
+  },
+  {
+    "id": "apple-mac-studio-m2-ultra-192", "category": "apple-system", "manufacturer": "Apple", "name": "Mac Studio M2 Ultra 192 GB",
+    "description": "Used-market 192 GB unified-memory desktop with 800 GB/s bandwidth.",
+    "price": { "amountCents": 489900, "currency": "USD", "priceType": "reference", "retailer": "Used-market reference", "sourceUrl": "https://support.apple.com/en-us/111835", "observedAt": "2026-08-13" },
+    "tags": ["desktop", "metal", "192gb", "used"], "specSourceUrl": "https://support.apple.com/en-us/111835",
+    "systemClass": "desktop", "chip": "M2 Ultra", "cpuCores": 24, "gpuCores": 76, "unifiedMemoryGb": 192, "memoryBandwidthGbS": 800, "storageGb": 2000, "maxSystemPowerW": 370, "upgradeable": false
+  }
+]

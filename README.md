@@ -34,7 +34,8 @@ The difficult part is buying well. Product names hide memory limits. Peak specif
 
 | Question | Where the app helps |
 |---|---|
-| What can I build without socket, memory, PCIe, or power conflicts? | Guided compatibility-aware PC builder |
+| What can I build without socket, memory, PCIe, cooling, PSU, or outlet conflicts? | Guided AI-homelab designer and advanced compatibility auditor |
+| Will this exact model fit at my context and concurrency? | Weight, runtime, KV-cache, tensor-split, and offload calculator |
 | Which GPUs are fastest on the same LLM protocol? | Fixed-control token-generation and prompt-processing rankings |
 | What gives me the most useful AI performance for the purchase price? | 50/50 performance-and-value buyer score with a capped VRAM contribution |
 | What fits a 24, 32, 40, 48, 72, 80, or 96 GB model target? | VRAM-focused GPU research and model-format compatibility |
@@ -47,7 +48,7 @@ The difficult part is buying well. Product names hide memory limits. Peak specif
 
 <table>
   <tr>
-    <td align="center"><strong>259</strong><br /><sub>seeded hardware records</sub></td>
+    <td align="center"><strong>290</strong><br /><sub>seeded hardware records</sub></td>
     <td align="center"><strong>84</strong><br /><sub>researched NVIDIA & AMD GPUs</sub></td>
     <td align="center"><strong>34</strong><br /><sub>same-file Llama 2 7B GPU results</sub></td>
     <td align="center"><strong>68</strong><br /><sub>GPUs with 24 GB+ addressable VRAM</sub></td>
@@ -67,7 +68,22 @@ The difficult part is buying well. Product names hide memory limits. Peak specif
 
 <br />
 
-The catalog spans CPUs, motherboards, memory, consumer GPUs, workstation accelerators, data-center cards, mini AI PCs, and complete server systems. GPU research covers NVIDIA and AMD separately, then organizes NVIDIA cards by architecture—from Volta and Turing through Ampere, Ada, Hopper, and Blackwell.
+The catalog spans CPUs, motherboards, memory, consumer GPUs, workstation accelerators, data-center cards, PSUs, chassis, cooling, storage, networking, 128 GB+ Apple systems, mini AI PCs, and complete server systems. GPU research covers NVIDIA and AMD separately, then organizes NVIDIA cards by architecture—from Volta and Turing through Ampere, Ada, Hopper, and Blackwell.
+
+### The AI homelab designer
+
+The builder now starts with the workload and exact model profile, then audits a complete node:
+
+- Quantity-aware 1–8 GPU configurations and per-slot PCIe topology.
+- CPU socket, memory generation/registration/capacity, cooling, and physical chassis fit.
+- ATX 3.x PSU capacity, native high-power GPU connectors, and cable counts.
+- US 120/240 V and international 230 V household-power planning profiles.
+- Wall power, amperage, circuit utilization, heat output, and modeled power-limit retention.
+- Model weights, runtime reserve, KV cache, context, concurrency, tensor splitting, and CPU offload.
+- Complete hardware cost with already-owned parts excluded.
+- Shareable builds, JSON export, simple guidance, and an advanced evidence view.
+
+Read the **[AI Homelab Field Guide](docs/AI-HOMELAB-GUIDE.md)** or the **[Benchmark Contribution Contract](docs/BENCHMARK-CONTRIBUTION.md)**.
 
 ### Workload research included
 
@@ -118,14 +134,21 @@ compute-value/
 │   ├── catalog.ts              hardware and specification catalog
 │   ├── benchmarks.ts           conventional benchmark evidence
 │   ├── llm-benchmarks.ts       fixed-control LLM results
-│   └── ebay-market.ts          screened used-market observations
+│   ├── ebay-market.ts          screened used-market observations
+│   ├── homelab.ts              compatibility, model-fit and power engine
+│   └── homelab-catalog.ts      validated supporting-product loader
+├── data/
+│   ├── catalog/                reviewable homelab product records
+│   └── schemas/                contribution data contracts
 ├── src/
 │   ├── components/             builder, rankings, research labs, explorers
 │   ├── data/                   scores, protocols, clusters, model support
 │   ├── lib/                    API and display helpers
 │   └── styles/app.css          responsive Compute Value visual system
 ├── docs/
-│   └── SCORING-AND-DATA.md     formulas, evidence rules, reproducibility
+│   ├── SCORING-AND-DATA.md     formulas, evidence rules, reproducibility
+│   ├── AI-HOMELAB-GUIDE.md     model-to-system planning guide
+│   └── BENCHMARK-CONTRIBUTION.md reproducible submission contract
 ├── scripts/                    repeatable research helpers
 └── data/pc-builder.sqlite      generated local database; never published
 ```
@@ -159,6 +182,7 @@ Open **http://localhost:4174**.
 
 ```bash
 npm test
+npm run validate:data
 npm run build
 curl http://localhost:4174/api/health
 ```
@@ -175,6 +199,11 @@ The SQLite database is generated at `data/pc-builder.sqlite`. Set `PC_BUILDER_DB
 | `GET` | `/api/hashcat-luks2` | Fixed 1 GiB Tails-equivalent LUKS2 evidence |
 | `GET` | `/api/compatible` | Compatible product IDs for the current build |
 | `POST` | `/api/validate` | Full compatibility, power, total, and issue report |
+| `GET` | `/api/v2/products` | Paginated, faceted v2 catalog including homelab parts and Apple systems |
+| `POST` | `/api/v2/builds/validate` | Quantity-aware complete-node compatibility and cost audit |
+| `POST` | `/api/v2/model-fit` | Model, context, concurrency, sharding, and offload fit report |
+| `POST` | `/api/v2/power-plan` | PSU, wall circuit, amperage, heat, and power-limit plan |
+| `GET` | `/api/v2/benchmark-profiles` | Frozen model controls and electrical planning profiles |
 
 Examples:
 

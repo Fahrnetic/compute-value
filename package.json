@@ -10,6 +10,7 @@
     "build": "tsc --noEmit && vite build",
     "start": "NODE_ENV=production tsx server/index.ts",
     "research:ebay": "node scripts/research-ebay-used-market.mjs",
+    "validate:data": "node scripts/validate-homelab-data.mjs",
     "test": "vitest run"
   },
   "dependencies": {

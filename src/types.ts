@@ -1,4 +1,16 @@
-export type Category = 'cpu' | 'motherboard' | 'gpu' | 'ram' | 'mini-pc' | 'server-system';
+export type Category =
+  | 'cpu'
+  | 'motherboard'
+  | 'gpu'
+  | 'ram'
+  | 'mini-pc'
+  | 'server-system'
+  | 'psu'
+  | 'chassis'
+  | 'cooler'
+  | 'storage'
+  | 'nic'
+  | 'apple-system';
 export type BuilderCategory = 'cpu' | 'motherboard' | 'gpu' | 'ram';
 
 export interface PriceReference {
@@ -170,6 +182,24 @@ export interface Motherboard extends BaseProduct {
   supportedCpuIds?: string[];
   requiredBiosByCpuId?: Record<string, string>;
   registeredMemoryRequired?: boolean;
+  pcieSlots?: PcieSlotSpec[];
+  above4gDecoding?: boolean;
+  resizableBar?: boolean;
+  iommuSupport?: boolean;
+  auxiliaryPciePower?: string[];
+}
+
+export interface PcieSlotSpec {
+  id: string;
+  label: string;
+  generation: number;
+  physicalLanes: number;
+  electricalLanes: number;
+  source: 'cpu' | 'chipset' | 'switch';
+  position: number;
+  spacingSlots: number;
+  bifurcation?: string[];
+  sharesWith?: string[];
 }
 
 export interface Gpu extends BaseProduct {
@@ -216,7 +246,7 @@ export interface Ram extends BaseProduct {
   modules: number;
   speedMt: number;
   casLatency: number;
-  profile: 'EXPO' | 'XMP' | 'EXPO + XMP';
+  profile: 'EXPO' | 'XMP' | 'EXPO + XMP' | 'JEDEC';
   registered?: boolean;
   ecc?: boolean;
 }
@@ -287,7 +317,95 @@ export interface ServerSystem extends BaseProduct {
   sourceUrls: string[];
 }
 
-export type Product = Cpu | Motherboard | Gpu | Ram | MiniPc | ServerSystem;
+export interface Psu extends BaseProduct {
+  category: 'psu';
+  continuousPowerW: number;
+  peakPowerW?: number;
+  efficiencyRating: '80 Plus Gold' | '80 Plus Platinum' | '80 Plus Titanium';
+  atxVersion: string;
+  formFactor: 'ATX' | 'SFX' | 'SFX-L' | 'server';
+  inputVoltage: string;
+  pcie8PinConnectors: number;
+  native12v2x6Connectors: number;
+  eps8PinConnectors: number;
+  redundant?: boolean;
+}
+
+export interface Chassis extends BaseProduct {
+  category: 'chassis';
+  formFactors: Motherboard['formFactor'][];
+  maxGpuLengthMm: number;
+  expansionSlots: number;
+  maxGpuSlotWidth: number;
+  psuFormFactors: Psu['formFactor'][];
+  rackUnits?: number;
+  passiveGpuReady: boolean;
+  radiatorSupportMm?: number[];
+}
+
+export interface Cooler extends BaseProduct {
+  category: 'cooler';
+  coolerType: 'air' | 'liquid' | 'server-air';
+  supportedSockets: string[];
+  thermalCapacityW: number;
+  heightMm?: number;
+  radiatorSizeMm?: number;
+}
+
+export interface StorageDevice extends BaseProduct {
+  category: 'storage';
+  capacityGb: number;
+  interface: string;
+  formFactor: string;
+  sequentialReadMbS: number;
+  enduranceTbw?: number;
+  powerW: number;
+}
+
+export interface Nic extends BaseProduct {
+  category: 'nic';
+  speedGbps: number;
+  ports: number;
+  interface: string;
+  pcieGeneration: number;
+  pcieLanes: number;
+  powerW: number;
+  connector: string;
+  rdma: boolean;
+}
+
+export interface AppleSystem extends BaseProduct {
+  category: 'apple-system';
+  systemClass: 'portable' | 'desktop';
+  chip: string;
+  cpuCores: number;
+  gpuCores: number;
+  unifiedMemoryGb: number;
+  memoryBandwidthGbS: number;
+  storageGb: number;
+  maxSystemPowerW: number;
+  upgradeable: false;
+  universalLlama2?: {
+    promptTokensPerSecond: number;
+    generatedTokensPerSecond: number;
+    evidence: 'measured-public' | 'modeled';
+    sourceUrl: string;
+  };
+}
+
+export type Product =
+  | Cpu
+  | Motherboard
+  | Gpu
+  | Ram
+  | MiniPc
+  | ServerSystem
+  | Psu
+  | Chassis
+  | Cooler
+  | StorageDevice
+  | Nic
+  | AppleSystem;
 
 export interface CatalogResponse {
   products: Product[];
@@ -324,4 +442,97 @@ export interface ValidationResult {
     estimatedLoadW: number;
     recommendedPsuW: number;
   };
+}
+
+export type HomelabWorkload = 'chat' | 'coding' | 'rag' | 'image' | 'fine-tune' | 'multi-user';
+
+export interface BuildSpec {
+  cpuId?: string;
+  motherboardId?: string;
+  ramId?: string;
+  gpuId?: string;
+  gpuCount: number;
+  gpuPowerLimitPercent: number;
+  psuId?: string;
+  chassisId?: string;
+  coolerId?: string;
+  storageId?: string;
+  nicId?: string;
+  electricalProfileId: string;
+  workload: HomelabWorkload;
+  modelProfileId: string;
+  contextTokens: number;
+  concurrentUsers: number;
+  budgetCents?: number;
+  ownedProductIds?: string[];
+}
+
+export interface AuditCheck {
+  code: string;
+  status: 'pass' | 'fail' | 'warning' | 'unknown';
+  severity: 'critical' | 'important' | 'advisory';
+  title: string;
+  detail: string;
+  evidenceUrl?: string;
+  fix?: string;
+}
+
+export interface ElectricalProfile {
+  id: string;
+  label: string;
+  voltage: number;
+  breakerAmps: number;
+  continuousLoadFactor: number;
+  region: string;
+}
+
+export interface PowerPlan {
+  idleW: number;
+  typicalW: number;
+  componentPeakW: number;
+  wallPeakW: number;
+  recommendedPsuW: number;
+  selectedPsuW?: number;
+  circuitContinuousLimitW: number;
+  circuitUtilizationPercent: number;
+  estimatedAmps: number;
+  heatBtuH: number;
+  outletVerdict: 'ordinary-outlet' | 'dedicated-circuit' | '240v-recommended' | 'not-suitable';
+  performanceRetentionPercent: number;
+  notes: string[];
+}
+
+export interface ModelProfile {
+  id: string;
+  label: string;
+  parametersB: number;
+  quantization: string;
+  weightGb: number;
+  baseOverheadGb: number;
+  kvGbPer8kContext: number;
+  sourceUrl: string;
+}
+
+export interface ModelFitReport {
+  status: 'fits-accelerator' | 'fits-multi-gpu' | 'fits-cpu-offload' | 'does-not-fit' | 'unknown';
+  label: string;
+  requiredMemoryGb: number;
+  addressableMemoryGb: number;
+  aggregateMemoryGb: number;
+  estimatedMaxContext: number;
+  estimatedConcurrentUsers: number;
+  explanation: string;
+  confidence: 'measured-boundary' | 'calculated' | 'planning-estimate';
+}
+
+export interface HomelabAudit {
+  schemaVersion: 2;
+  status: 'works' | 'works-with-limitations' | 'needs-changes' | 'incomplete';
+  headline: string;
+  checks: AuditCheck[];
+  totalCents: number;
+  uncoveredCostItems: string[];
+  power: PowerPlan;
+  modelFit: ModelFitReport;
+  laneSummary: Array<{ slot: string; device: string; lanes: string; note: string }>;
 }
