@@ -1,83 +1,161 @@
-# Compute Value — Forge PC Lab
+<div align="center">
+  <img src="docs/assets/compute-value-banner.svg" alt="Compute Value — local hardware research for real workloads" width="100%" />
+</div>
 
-Compute Value is the source repository for Forge, a compatibility-aware PC hardware catalog, AI-compute comparison lab, and guided builder. It uses a locally generated SQLite database, a typed Express API, and a React/TypeScript interface.
+<div align="center">
+  <br />
+  <strong>A personal hardware database, built in public for anyone who wants more useful compute per dollar.</strong>
+  <br /><br />
+  <a href="#why-local-compute">Why local?</a> ·
+  <a href="#what-you-can-answer">Explore the data</a> ·
+  <a href="#evidence-before-confidence">Evidence model</a> ·
+  <a href="#run-it-locally">Run locally</a> ·
+  <a href="#contributing">Contribute</a>
+  <br /><br />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-React-3178C6?style=flat-square" />
+  <img alt="SQLite" src="https://img.shields.io/badge/data-SQLite-44A9D5?style=flat-square" />
+  <img alt="Private repository" src="https://img.shields.io/badge/repository-private-C8F768?style=flat-square&labelColor=101719" />
+  <img alt="Community contributions welcome" src="https://img.shields.io/badge/contributions-welcome-70E6D2?style=flat-square&labelColor=101719" />
+</div>
 
-## Included now
+---
 
-- 259 seeded records across CPUs, motherboards, GPUs, RAM kits, mini AI PCs, and complete server systems
-- 84 researched NVIDIA/AMD GPUs, including 68 cards with at least 24 GB of addressable memory
-- Consumer, workstation, virtualization, and data-center GPUs spanning Kepler/GCN through Blackwell/CDNA 4
-- GPU memory topology, bus width/bandwidth, PCIe link, cooling, power, dimensions, display capability, CUDA/ROCm metadata, and NVIDIA sparse-FP4 AI TOPS
-- 15 NVIDIA Blackwell variants across GeForce, RTX PRO workstation, and RTX PRO server cards
-- 15 additional mainstream NVIDIA Ampere/Ada cards from the RTX 3060 12 GB through RTX 4080 SUPER, including separate 4060 Ti 8/16 GB variants and the RTX 4070 SUPER
-- Normalized category-specific spec tables and time-stamped price references
-- Guided four-part builder with compatible-only filtering
-- Rules for CPU sockets, DDR4/DDR5, DIMM count/capacity, PCIe slots, display output, split VRAM, passive GPU airflow, GPU clearance, and PSU guidance
-- Searchable/filterable parts database
-- Fastest-to-slowest performance rankings led by measured LLM tokens/second, with separate GPU VRAM, CPU memory, CPU PCIe, and motherboard-lane views
-- 34 single-GPU llama.cpp measurements using the exact same `llama-2-7b.Q4_0.gguf` file and `tg128`/`pp512` test profile, plus vendor-native CUDA-core, stream-processor, or Xe-core counts
-- A dedicated audit of all 21 physical 32 GB GPU boards, with fixed-control and qualified same-model measurements, full memory/power/bandwidth/core context, and split-pool warnings for M10, Pro Duo, and V340
-- A default NVIDIA Ampere+ research scope that reranks Ampere, Ada Lovelace, Hopper, and Blackwell cards without older NVIDIA or non-NVIDIA results occupying rank positions
-- Independent UL Procyon cross-checks across Phi-3.5, Mistral 7B, Llama 3.1 8B, and Llama 2 13B, plus a three-model LocalScore scaling view for the RTX 4070 SUPER
-- Model-level RTX PRO 6000 Blackwell 96 GB vs H200 NVL comparisons using shared NVIDIA Cosmos3 and MLPerf Closed workloads, with server-proxy and multi-GPU normalization warnings kept visible
-- A second every-card `Meta-Llama-3.1-8B-Instruct-Q4_K_M` llama.cpp protocol (4.92 GB) plus a published, exact-file Q8_0 RTX 5090-vs-H200 NVL control and a six-GPU Qwen2.5-7B vLLM serving matrix
-- An eight-model RTX PRO 6000 Blackwell Workstation Edition LM Studio library and a dedicated Qwen3.6-27B evidence/protocol view
-- A 50/50 performance-versus-value buyer ranking: 42.5% fixed-control performance, 42.5% performance per dollar, and a capped 15% addressable-VRAM contribution for cards with at least 24 GB
-- A dedicated exact-48-GB ranking with 13 audited cards, including 10 qualifying used prices, two labeled open-box/refurbished signals, and one rejected low-trust signal that cannot enter the buyer score
-- Dated used eBay asking-price research for all 80 bandwidth-ranked GPUs: 88 retained asks across 44 exact models after seller-history and listing-condition screening
-- Dedicated mini AI PC comparison view for memory, storage, NPU TOPS, and upgradeability
-- Dedicated Optane server explorer covering 12 Intel, Dell, HPE, Lenovo, and Cisco systems
-- Full Intel PMem 100/200 CPU qualification pools (61 Cascade Lake and 49 Ice Lake Xeon models)
-- Per-server PMem capacity/module count, PCIe riser topology, board/system size, Linux/Windows qualification, and Sluice V2 breakout verdicts
-- Official PSU options plus PMem-only and CPU+PMem power budgets, with redundancy and input-voltage warnings instead of misleading fixed wall-draw claims
-- Persistent builds using browser local storage
-- Responsive desktop and mobile interface
+## Why local compute
 
-Reference prices are not live offers. Each record stores a price type, retailer/source label, source URL, and observation date. A GPU shown as “Quote / used market” has no trustworthy public dollar reference; its zero database amount is deliberately excluded from build totals and never means free hardware.
+The cloud is useful, but it should not be the only way to do serious work. A capable local machine gives you privacy, predictable costs, control over your tools, offline availability, and hardware that keeps producing value after the first month.
 
-Used eBay prices are a separate market snapshot, not a replacement for MSRP/reference pricing and not a completed-sales appraisal. Retained listings must match the exact GPU, be marked used, and come from a seller with at least 98% positive feedback and 100 feedback records. Asking prices exclude shipping and tax, may accept lower offers, and can disappear at any time. Defective cards, qualification samples, accessories, multi-card lots, and whole-server listings are excluded. A researched GPU with no qualifying listing is shown as “No trusted match” rather than $0.
+The difficult part is buying well. Product names hide memory limits. Peak specifications do not guarantee model speed. A cheap accelerator can become expensive after the host, cooling, power delivery, and interconnect are included. Two cards with the same VRAM can behave very differently once a real workload starts.
 
-The LLM leaderboard uses measured llama.cpp community-scoreboard results, not values inferred from bandwidth or core count. Every ranked row uses the same Llama 2 7B `Q4_0` model file, one GPU, full GPU offload, flash attention disabled, 128 generated tokens (`tg128`), and a separate 512-token prompt-ingest result (`pp512`). CUDA, ROCm, and Vulkan are shown explicitly. The llama.cpp commit, driver, host CPU, cooling, and card power limit can still vary between community submissions, so this is a much stronger comparison than a spec estimate but not a single-lab controlled experiment. Unmeasured GPUs remain unranked.
+**Compute Value exists to make those tradeoffs visible.** It is a personal research database dedicated to helping anyone compare hardware by the things that actually matter: workload performance, usable memory, power, system cost, compatibility, and the quality of the evidence.
 
-The model-level comparison is a separate evidence layer. NVIDIA Cosmos3 results compare the same checkpoint and AIPerf matrix on RTX PRO 6000 Blackwell and H200 NVL, while MLPerf Closed results provide standardized deployment-throughput proxies. MLPerf RTX figures use the passive Server Edition and published multi-GPU totals normalized by GPU count, so they are never presented as desktop single-stream measurements. Qwen3.6-27B results remain topology-specific; an H200 value is deliberately absent until the same checkpoint, precision, runtime, MTP setting, concurrency, and sequence lengths are published.
+> The goal is not to crown one universally “best” GPU. The goal is to show which route makes sense for *your* model, budget, outlet, chassis, and tolerance for complexity.
 
-The every-card control selects Bartowski's 4.92 GB `Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf`, which fits the catalog's 8 GB floor with KV-cache headroom. Published LTT Labs H200 NVL and RTX 5090 measurements use the exact same Llama 3.1 8B Q8_0 file and `llama-bench` commands, but remain a separate Q8 control rather than being mixed into the pending Q4 ranking. Koyeb's Qwen2.5-7B matrix likewise remains its own vLLM serving view because runtime, dtype, and request batching are not interchangeable with llama.cpp.
+## What you can answer
 
-The NVIDIA consumer cross-check keeps three more evidence types separate. GPUreport's UL Procyon values are composite points and therefore never labeled tokens/sec. BenchLife's Procyon table publishes tokens/sec for four RTX 40 cards, but does not disclose which 4060 Ti capacity was used. LocalScore's RTX 4070 SUPER page shows prompt speed, generation speed, and TTFT for 1.5B, 8B, and 14.8B Q4_K models; because its accelerator summary does not expose one shared host record for all three values, it is treated as a model-size scaling reference rather than merged into the fixed-profile card ranking.
+| Question | Where the app helps |
+|---|---|
+| What can I build without socket, memory, PCIe, or power conflicts? | Guided compatibility-aware PC builder |
+| Which GPUs are fastest on the same LLM protocol? | Fixed-control token-generation and prompt-processing rankings |
+| What gives me the most useful AI performance for the purchase price? | 50/50 performance-and-value buyer score with a capped VRAM contribution |
+| What fits a 24, 32, 40, 48, 72, 80, or 96 GB model target? | VRAM-focused GPU research and model-format compatibility |
+| Can this system run from a normal household circuit? | Whole-system and four-GPU cluster power guidance |
+| Where does scaling break down? | PCIe, NVLink/NVSwitch, tensor-parallel, and cluster topology notes |
+| Is a number measured, proxied, or modeled? | Visible evidence tiers, source links, uncertainty, and missing-data states |
+| What does the used market change? | Dated, seller-screened marketplace observations kept separate from MSRP |
 
-The long-tail 24 GB+ GPU survey and the mainstream GPU catalog are limited to standard PCIe add-in cards that can physically connect to the cataloged motherboards. Laptop/soldered GPUs, NVIDIA SXM modules, AMD OAM/EAM modules, Apple MPX modules, and every board-partner cooler SKU are excluded. Distinct vendor reference models, capacity variants, cooling variants, and region-only models are retained. Multi-GPU boards are labeled with their smaller per-GPU addressable memory pool.
+## The database at a glance
 
-The server scope uses Intel Optane Persistent Memory (PMem) 100 and 200, which are DDR4-compatible 288-pin server modules—not consumer Optane caching products. Servers are configurable, so CPU lists represent Intel's complete PMem-qualified Xeon pool; a specific OEM system may impose a narrower firmware, thermal, or sales configuration matrix. The Sluice V2 comparison uses its published 305 × 245 mm ATX-only tray. None of the researched proprietary dual-socket server planars is a stock drop-in.
+<table>
+  <tr>
+    <td align="center"><strong>259</strong><br /><sub>seeded hardware records</sub></td>
+    <td align="center"><strong>84</strong><br /><sub>researched NVIDIA & AMD GPUs</sub></td>
+    <td align="center"><strong>34</strong><br /><sub>same-file Llama 2 7B GPU results</sub></td>
+    <td align="center"><strong>68</strong><br /><sub>GPUs with 24 GB+ addressable VRAM</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>15</strong><br /><sub>NVIDIA Blackwell variants</sub></td>
+    <td align="center"><strong>13</strong><br /><sub>audited exact-48-GB cards</sub></td>
+    <td align="center"><strong>12</strong><br /><sub>complete Optane server systems</sub></td>
+    <td align="center"><strong>4-GPU</strong><br /><sub>cluster compatibility matrix</sub></td>
+  </tr>
+</table>
+
+<div align="center">
+  <img src="docs/assets/compute-value-ui.png" alt="Compute Value hardware catalog with coverage cards, filters, and source-linked product records" width="100%" />
+  <sub>The same research database at desktop and mobile widths, with confidence and source context kept beside the numbers.</sub>
+</div>
+
+<br />
+
+The catalog spans CPUs, motherboards, memory, consumer GPUs, workstation accelerators, data-center cards, mini AI PCs, and complete server systems. GPU research covers NVIDIA and AMD separately, then organizes NVIDIA cards by architecture—from Volta and Turing through Ampere, Ada, Hopper, and Blackwell.
+
+### Workload research included
+
+- Same-file `llama.cpp` Llama 2 7B Q4_0 comparisons with `tg128` and `pp512` kept separate.
+- A second Llama 3.1 8B control plus exact-file Q8 RTX 5090-versus-H200 NVL evidence.
+- Qwen, LocalScore, UL Procyon, NVIDIA Cosmos, and MLPerf cross-checks that remain separate when protocols differ.
+- NVIDIA Pro Blackwell, H100/H200, A100/A800, V100 PCIe/SXM, DGX Spark, and multi-GPU workstation research.
+- Model-format compatibility across language, image, and video generation with Q4, Q8, FP16, BF16, runtime, sharding, and VRAM requirements stored independently.
+- Memory-hard Argon2id and Tails-equivalent LUKS2 research with exact profiles and explicit measured/model boundaries.
+- Whole-catalog hash-rate value views for lawful performance research; different algorithms are never blended into one synthetic rate.
+
+## Evidence before confidence
+
+Every polished number should still answer: **where did this come from?** Compute Value uses four visible evidence states:
+
+| Evidence state | Meaning | Ranking treatment |
+|---|---|---|
+| **Measured** | The exact hardware and stated protocol were published or captured directly | Eligible for the matching fixed-control ranking |
+| **Hardware-qualified** | The exact device is known, but part of the workload context is incomplete | Shown with a qualification warning |
+| **Proxy** | Same silicon, sibling configuration, or a defensible published analogue | Kept separate from exact measurements |
+| **Model / estimate** | Derived from bandwidth, scaling, or another explicit assumption | Labeled with uncertainty; never presented as measured |
+
+This matters most for memory-hard workloads. More VRAM creates capacity for larger models or more concurrent jobs; it does **not** automatically make one Argon2 guess faster. Likewise, CUDA-core count, bandwidth, tensor throughput, and model speed are related but not interchangeable.
+
+Price evidence has its own rules. Reference prices, direct-retailer inventory, and used-market asks are stored separately. Screened eBay observations require an exact model match, used condition, at least 98% positive feedback, and at least 100 seller-feedback records. Sold-out pages, parts-only cards, misleading lots, and whole-system listings do not enter value calculations.
+
+Read the complete methodology and reproducibility contract in **[Scoring and Data](docs/SCORING-AND-DATA.md)**.
+
+## Product principles
+
+```
+Useful capacity  +  real workload speed  +  complete system cost
+───────────────────────────────────────────────────────────────
+       power, topology, compatibility, and evidence quality
+```
+
+1. **Compare like with like.** Model, quantization, runtime, batch size, context, offload, and topology stay attached to every performance result.
+2. **Show missing data.** An honest blank is more useful than a confident-looking invention.
+3. **Keep capacity and speed separate.** VRAM determines what can fit; compute and memory behavior determine how quickly it runs.
+4. **Price the route, not only the card.** Host platform, power delivery, cooling, interconnects, and chassis constraints can change the answer.
+5. **Make every assumption inspectable.** Sources, dates, formulas, evidence tiers, and uncertainty belong next to the conclusion.
 
 ## Repository map
 
-- `server/catalog.ts` — typed product and specification source records
-- `server/benchmarks.ts` and `server/llm-benchmarks.ts` — conventional and fixed-control benchmark datasets
-- `server/ebay-market.ts` — seller-screened used-market observations
-- `src/data/` — scoring, cluster, universal-model, Blackwell, V100, 32 GB, and 48 GB research datasets
-- `src/components/` and `src/styles/` — the complete React UI and responsive visual system
-- [`docs/SCORING-AND-DATA.md`](docs/SCORING-AND-DATA.md) — accepted evidence, formulas, price rules, and reproducibility contract
-- `scripts/research-ebay-used-market.mjs` — repeatable eBay research helper
+```text
+compute-value/
+├── server/                     typed source records, SQLite seeding, API
+│   ├── catalog.ts              hardware and specification catalog
+│   ├── benchmarks.ts           conventional benchmark evidence
+│   ├── llm-benchmarks.ts       fixed-control LLM results
+│   └── ebay-market.ts          screened used-market observations
+├── src/
+│   ├── components/             builder, rankings, research labs, explorers
+│   ├── data/                   scores, protocols, clusters, model support
+│   ├── lib/                    API and display helpers
+│   └── styles/app.css          responsive Compute Value visual system
+├── docs/
+│   └── SCORING-AND-DATA.md     formulas, evidence rules, reproducibility
+├── scripts/                    repeatable research helpers
+└── data/pc-builder.sqlite      generated local database; never published
+```
 
-## Run locally
+## Run it locally
+
+### Requirements
+
+- Node.js 20 or newer
+- npm
 
 ```bash
+git clone https://github.com/Fahrnetic/compute-value.git
+cd compute-value
 npm install
 npm run dev
 ```
 
-Open `http://localhost:5173`. The Vite client proxies API calls to port `4174`.
+Open **http://localhost:5173**. Vite serves the React interface and proxies API requests to the Express service on port `4174`.
 
-For a production build:
+For the production build:
 
 ```bash
 npm run build
 npm start
 ```
 
-Open `http://localhost:4174`.
+Open **http://localhost:4174**.
 
-## Verification
+### Verification
 
 ```bash
 npm test
@@ -85,24 +163,59 @@ npm run build
 curl http://localhost:4174/api/health
 ```
 
+The SQLite database is generated at `data/pc-builder.sqlite`. Set `PC_BUILDER_DB_PATH` to use a different local location.
+
 ## API
 
-- `GET /api/catalog` — all products and category counts
-- `GET /api/catalog?category=cpu&search=ryzen` — filtered catalog
-- `GET /api/catalog?category=server-system` — Optane server-system records
-- `GET /api/compatible?cpu=amd-ryzen-7-9800x3d` — valid item IDs for each builder category
-- `POST /api/validate` with `{ "selection": { "cpu": "...", "motherboard": "..." } }` — full rule results, total, and power guidance
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `GET` | `/api/catalog` | Complete catalog with optional category and search filters |
+| `GET` | `/api/ai-model-compatibility` | Model, format, precision, cluster, and fit matrix |
+| `GET` | `/api/hashcat-argon2` | Configuration-locked Argon2id evidence and models |
+| `GET` | `/api/hashcat-luks2` | Fixed 1 GiB Tails-equivalent LUKS2 evidence |
+| `GET` | `/api/compatible` | Compatible product IDs for the current build |
+| `POST` | `/api/validate` | Full compatibility, power, total, and issue report |
 
-The SQLite file is created at `data/pc-builder.sqlite`. Set `PC_BUILDER_DB_PATH` to use another location.
+Examples:
 
-## Data model
+```text
+/api/catalog?category=gpu&search=blackwell
+/api/ai-model-compatibility?modality=video&precision=Q4&cluster=rtx3090-quad
+/api/compatible?cpu=amd-ryzen-7-9800x3d
+```
 
-- `products` stores common identity, descriptions, and tags for builder parts and mini PCs.
-- `cpu_specs`, `motherboard_specs`, `gpu_specs`, `ram_specs`, and `mini_pc_specs` hold typed category attributes.
-- `server_systems` stores typed Optane, CPU, PCIe, physical-fit, operating-system, and source metadata for complete servers.
-- `price_references` supports price history without overwriting prior observations.
-- `benchmark_results` stores conventional CPU, graphics, and compute scores with source/version metadata.
-- `llm_benchmark_results` stores the fixed-model llama.cpp profile, backend, commit, `tg128`, and `pp512` measurements.
-- `marketplace_snapshots` and `marketplace_listings` store dated, seller-screened used-market research.
+## Contributing
 
-The CPU, mainstream motherboard, memory, and mini-PC portions remain representative. Cases, coolers, PSUs, storage, retailer ingestion, region/currency support, RAM QVLs, and partner-specific GPU dimensions are natural next expansions. Qualified workstation CPUs already carry board-specific QVL and minimum-BIOS checks.
+This started as a personal database, but it is meant for anyone to inspect, use, improve, and contribute to. The most valuable contribution is not simply another number—it is a number with enough context that another person can reproduce or correctly qualify it.
+
+### A strong data contribution includes
+
+- Exact hardware identity, including capacity, form factor, cooling variant, and accelerator count.
+- Workload/checkpoint, quantization or dtype, runtime and version, batch/concurrency, context length, and command line.
+- Host CPU, system memory, operating system, driver, power limit, and relevant interconnect topology.
+- Result units and whether the value is single-stream, aggregate throughput, prompt processing, generation, or latency.
+- Primary source URL, observation date, and enough notes to distinguish measurement from inference.
+
+### Before opening a change
+
+1. Read [Scoring and Data](docs/SCORING-AND-DATA.md).
+2. Keep unlike protocols in separate datasets and UI lanes.
+3. Add or update tests for formulas, filtering, and evidence labels.
+4. Run `npm test` and `npm run build`.
+5. Explain what the new evidence changes—and what it still cannot prove.
+
+Bug reports, missing-card requests, source corrections, UI improvements, and reproducible benchmark submissions are all welcome.
+
+## Scope and responsible use
+
+Prices are dated research references, not live offers or purchasing advice. Compatibility rules reduce obvious mistakes but cannot replace board QVLs, mechanical measurements, electrical planning, or manufacturer documentation.
+
+Security-workload data in this project exists only to compare lawful hardware-compute characteristics and memory-hard behavior. Use it only on systems and data you own or are explicitly authorized to test.
+
+---
+
+<div align="center">
+  <strong>Better local compute decisions should not require a sales call.</strong>
+  <br />
+  <sub>Measure carefully · label uncertainty · share what you learn</sub>
+</div>

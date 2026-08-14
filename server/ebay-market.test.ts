@@ -9,8 +9,8 @@ describe('eBay used-market research', () => {
       .map((product) => product.id).sort();
     expect(ebayUsedMarketSeeds.map((snapshot) => snapshot.productId).sort()).toEqual(rankedGpuIds);
     expect(ebayUsedMarketSeeds).toHaveLength(80);
-    expect(ebayUsedMarketSeeds.filter((snapshot) => snapshot.listings.length > 0)).toHaveLength(44);
-    expect(ebayUsedMarketSeeds.flatMap((snapshot) => snapshot.listings)).toHaveLength(88);
+    expect(ebayUsedMarketSeeds.filter((snapshot) => snapshot.listings.length > 0)).toHaveLength(45);
+    expect(ebayUsedMarketSeeds.flatMap((snapshot) => snapshot.listings)).toHaveLength(91);
   });
 
   it('only references exact catalog GPUs', () => {

@@ -373,12 +373,12 @@ export const aiRouteScoreById = new Map(aiRouteScores.map((route) => [route.id, 
 
 export const powerLimitEvidence: PowerLimitEvidence[] = [
   {
-    hardware: 'Tesla V100 32GB SXM2', stockPowerW: 300, efficientPowerW: 200,
-    decodeRetainedPercent: 98, prefillRetainedPercent: null, evidence: 'LLM measured',
-    workload: '20-model llama.cpp sweep · tg128; dense prompt processing is the cited worst case at 150W',
-    practicalLimit: '200W daily target · 150W hardware minimum reported',
-    sourceUrl: 'https://www.reddit.com/r/LocalLLaMA/comments/1s5o37v/v100_32_gb_6h_of_benchmarks_across_20_models_with/',
-    note: 'The author reports under 2% tg128 loss at 200W. Dense prompt processing was 22% slower at 150W, but the 200W prefill retention was not published as one universal figure.',
+    hardware: 'Tesla V100 SXM2 32GB on PCIe holder', stockPowerW: 300, efficientPowerW: 200,
+    decodeRetainedPercent: 96.3, prefillRetainedPercent: null, evidence: 'LLM measured',
+    workload: 'Qwen3.6 27B · llama.cpp · 300/250/200/150W owner sweep',
+    practicalLimit: '200W daily target · exact SXM2 hardware minimum is 150W',
+    sourceUrl: 'https://www.reddit.com/r/LocalLLaMA/comments/1t3oc0t/do_cheap_32gb_v100s_still_make_sense_for_homelab/',
+    note: 'Generation changed from 32.7 tok/s at 300W to 31.5 at 200W and 29.0 at 150W. This is one owner result; prompt processing was not published. CERN separately measured the same 150–300W SXM2 range.',
   },
   {
     hardware: 'GeForce RTX 3090', stockPowerW: 350, efficientPowerW: 250,

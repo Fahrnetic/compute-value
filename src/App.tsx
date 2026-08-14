@@ -1,4 +1,4 @@
-import { AlertTriangle, LoaderCircle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, Database, GitFork, HeartHandshake, LoaderCircle, RefreshCw } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Builder } from './components/Builder';
 import { BandwidthRankings } from './components/BandwidthRankings';
@@ -80,9 +80,21 @@ export default function App() {
 
   return (
     <div className="app">
+      <a className="skip-link" href="#main-content">Skip to content</a>
       <Header view={view} onView={setView} />
-      {page}
-      <footer><div className="brand footer-brand"><span className="brand-mark">F</span><span>FORGE</span></div><p>Compatibility-aware hardware research. Prices are dated references—verify before purchasing.</p><span>{catalog.meta.total} products · SQLite-backed</span></footer>
+      <div id="main-content">{page}</div>
+      <footer className="site-footer">
+        <div className="site-footer__brand">
+          <span className="brand-mark"><Database size={17} /></span>
+          <span><strong>COMPUTE VALUE</strong><small>Independent local-compute research</small></span>
+        </div>
+        <p>Open hardware data for choosing capable, affordable local systems. Prices are dated references and modeled results are always separated from measurements.</p>
+        <div className="site-footer__actions">
+          <a href="https://github.com/Fahrnetic/compute-value" target="_blank" rel="noreferrer"><GitFork /> Contribute on GitHub</a>
+          <span><HeartHandshake /> Built for the community</span>
+        </div>
+        <div className="site-footer__meta"><span>{catalog.meta.total} products</span><span>SQLite-backed</span><span>Source-linked</span></div>
+      </footer>
     </div>
   );
 }

@@ -1,30 +1,46 @@
-import { Boxes, Menu, X } from 'lucide-react';
+import { Boxes, Cpu, Database, Gauge, Menu, Network, Server, Wrench, X } from 'lucide-react';
 import { useState } from 'react';
 
 export type View = 'builder' | 'catalog' | 'bandwidth' | 'clusters' | 'mini-pcs' | 'servers';
+
+const navigation: Array<{ view: View; label: string; note: string; icon: typeof Wrench }> = [
+  { view: 'builder', label: 'Build', note: 'Compatibility', icon: Wrench },
+  { view: 'catalog', label: 'Hardware', note: 'Specs & prices', icon: Database },
+  { view: 'bandwidth', label: 'GPU rankings', note: 'AI performance', icon: Gauge },
+  { view: 'clusters', label: 'Clusters', note: 'Scale & power', icon: Network },
+  { view: 'mini-pcs', label: 'Mini PCs', note: 'Small systems', icon: Cpu },
+  { view: 'servers', label: 'Servers', note: 'Optane systems', icon: Server },
+];
 
 export function Header({ view, onView }: { view: View; onView: (view: View) => void }) {
   const [open, setOpen] = useState(false);
   const select = (next: View) => { onView(next); setOpen(false); };
   return (
     <header className="site-header">
-      <button className="brand" onClick={() => select('builder')} aria-label="Forge home">
+      <button className="brand" onClick={() => select('builder')} aria-label="Compute Value home">
         <span className="brand-mark"><Boxes size={20} /></span>
-        <span>FORGE</span>
-        <small>PC LAB</small>
+        <span className="brand-copy"><strong>COMPUTE VALUE</strong><small>LOCAL HARDWARE LAB</small></span>
       </button>
-      <button className="menu-button" onClick={() => setOpen(!open)} aria-label="Toggle navigation">
+      <button className="menu-button" onClick={() => setOpen(!open)} aria-label="Toggle navigation" aria-expanded={open}>
         {open ? <X /> : <Menu />}
       </button>
-      <nav className={open ? 'nav-open' : ''}>
-        <button className={view === 'builder' ? 'active' : ''} onClick={() => select('builder')}>Build a PC</button>
-        <button className={view === 'catalog' ? 'active' : ''} onClick={() => select('catalog')}>Parts database</button>
-        <button className={view === 'bandwidth' ? 'active' : ''} onClick={() => select('bandwidth')}>Performance ranks</button>
-        <button className={view === 'clusters' ? 'active' : ''} onClick={() => select('clusters')}>Enterprise clusters</button>
-        <button className={view === 'mini-pcs' ? 'active' : ''} onClick={() => select('mini-pcs')}>Mini AI PCs</button>
-        <button className={view === 'servers' ? 'active' : ''} onClick={() => select('servers')}>Optane servers</button>
+      <nav className={open ? 'nav-open' : ''} aria-label="Primary navigation">
+        {navigation.map((item) => {
+          const Icon = item.icon;
+          return (
+            <button
+              key={item.view}
+              className={view === item.view ? 'active' : ''}
+              onClick={() => select(item.view)}
+              aria-current={view === item.view ? 'page' : undefined}
+            >
+              <Icon className="nav-icon" />
+              <span className="nav-copy"><strong>{item.label}</strong><small>{item.note}</small></span>
+            </button>
+          );
+        })}
       </nav>
-      <span className="header-status"><i /> Compatibility engine online</span>
+      <span className="header-status"><i /> Research database online</span>
     </header>
   );
 }

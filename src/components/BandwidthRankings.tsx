@@ -17,6 +17,7 @@ import { V100Benchmarks } from './V100Benchmarks';
 import { OwnedGpuArrows } from './OwnedGpuArrows';
 import { ApplesLlmScoreSummary } from './ApplesLlmScoreSummary';
 import { Gpu48GbRanking } from './Gpu48GbRanking';
+import { HashcatPotential } from './HashcatPotential';
 import { scoreApplesComparableGpus } from '../data/apples-llm-score';
 import {
   formatRepresentativePrice,
@@ -566,6 +567,7 @@ export function BandwidthRankings({ products }: { products: Product[] }) {
           />
         )}
 
+        {metric === 'llm-tokens' && <HashcatPotential products={products} />}
         {metric === 'llm-tokens' && directoryVendor === 'NVIDIA' && <UniversalLlama2Coverage products={products} />}
         {metric === 'llm-tokens' && directoryVendor === 'NVIDIA' && <V100Benchmarks products={products} />}
         {metric === 'llm-tokens' && directoryVendor === 'NVIDIA' && <ProBlackwellBenchmarks products={products} />}

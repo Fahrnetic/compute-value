@@ -6,6 +6,26 @@ import { allProducts } from './catalog.js';
 import { benchmarkSeeds, type BenchmarkSeed } from './benchmarks.js';
 import { ebaySellerRule, ebayUsedMarketSeeds, type EbayUsedMarketSeed } from './ebay-market.js';
 import { gpuParallelProcessors, llmBenchmarkSeeds, userExcludedGpuIds, type LlmBenchmarkSeed } from './llm-benchmarks.js';
+import {
+  modelSupportCatalog,
+  type AiModelCompatibilityCatalog,
+  type AiModelFormat,
+  type AiModelProfile,
+  type FourGpuModelCluster,
+  type FourGpuModelCompatibility,
+} from '../src/data/model-format-support.js';
+import {
+  argon2BenchmarkSeeds,
+  argon2Profile,
+  argon2ResearchDate,
+  type Argon2BenchmarkSeed,
+} from '../src/data/argon2-benchmarks.js';
+import {
+  tailsLuks2BenchmarkSeeds,
+  tailsLuks2Profile,
+  tailsLuks2ResearchDate,
+  type TailsLuks2BenchmarkSeed,
+} from '../src/data/tails-luks2-benchmarks.js';
 import type { BenchmarkResult, Category, Cpu, Gpu, LlmBenchmarkResult, MiniPc, Motherboard, Product, Ram, ServerSystem, UsedMarketSnapshot } from '../src/types.js';
 
 const serverDir = dirname(fileURLToPath(import.meta.url));
@@ -113,6 +133,111 @@ db.exec(`
     PRIMARY KEY(product_id, profile_key)
   );
 
+  CREATE TABLE IF NOT EXISTS hashcat_luks2_results (
+    product_id TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    profile_key TEXT NOT NULL,
+    hashcat_mode INTEGER NOT NULL CHECK(hashcat_mode = 34100),
+    profile_name TEXT NOT NULL,
+    memory_kib INTEGER NOT NULL,
+    time_cost INTEGER NOT NULL,
+    parallelism INTEGER NOT NULL,
+    iterations_shown INTEGER NOT NULL,
+    guesses_per_second REAL NOT NULL CHECK(guesses_per_second > 0),
+    rfc_argon2_hs REAL,
+    evidence TEXT NOT NULL CHECK(evidence IN ('measured-public','measured-public-mean','measured-local','hardware-qualified')),
+    uncertainty_percent REAL NOT NULL DEFAULT 0,
+    sample_count INTEGER,
+    reported_spread_hs REAL,
+    benchmark_hardware TEXT NOT NULL,
+    hashcat_version TEXT NOT NULL,
+    source_name TEXT NOT NULL,
+    source_url TEXT NOT NULL,
+    profile_source_url TEXT NOT NULL,
+    tails_source_url TEXT NOT NULL,
+    observed_at TEXT NOT NULL,
+    notes TEXT NOT NULL,
+    PRIMARY KEY(product_id, profile_key)
+  );
+
+  CREATE TABLE IF NOT EXISTS hashcat_argon2_results (
+    product_id TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    profile_key TEXT NOT NULL,
+    hashcat_mode INTEGER NOT NULL CHECK(hashcat_mode = 34000),
+    profile_name TEXT NOT NULL,
+    memory_kib INTEGER NOT NULL,
+    time_cost INTEGER NOT NULL,
+    parallelism INTEGER NOT NULL,
+    hashes_per_second REAL NOT NULL CHECK(hashes_per_second > 0),
+    evidence TEXT NOT NULL CHECK(evidence IN ('measured-public','measured-public-cluster','measured-local','hardware-qualified-cluster','bandwidth-model')),
+    uncertainty_percent REAL NOT NULL DEFAULT 0,
+    benchmark_hardware TEXT NOT NULL,
+    hashcat_version TEXT NOT NULL,
+    source_name TEXT NOT NULL,
+    source_url TEXT NOT NULL,
+    method_source_url TEXT,
+    profile_source_url TEXT NOT NULL,
+    observed_at TEXT NOT NULL,
+    notes TEXT NOT NULL,
+    PRIMARY KEY(product_id, profile_key)
+  );
+
+  CREATE TABLE IF NOT EXISTS ai_models (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    modality TEXT NOT NULL CHECK(modality IN ('llm','image','video')),
+    parameter_count_b REAL,
+    tasks_json TEXT NOT NULL,
+    native_precision TEXT NOT NULL CHECK(native_precision IN ('FP16','BF16','mixed')),
+    source_url TEXT NOT NULL,
+    notes TEXT NOT NULL,
+    observed_at TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS ai_model_formats (
+    id TEXT PRIMARY KEY,
+    model_id TEXT NOT NULL REFERENCES ai_models(id) ON DELETE CASCADE,
+    precision TEXT NOT NULL CHECK(precision IN ('Q4','Q8','FP16','BF16')),
+    format TEXT NOT NULL,
+    availability TEXT NOT NULL CHECK(availability IN ('official checkpoint','official runtime recipe','framework-supported','not verified')),
+    available INTEGER NOT NULL CHECK(available IN (0,1)),
+    runtime TEXT NOT NULL,
+    weight_payload_gb REAL,
+    payload_basis TEXT NOT NULL CHECK(payload_basis IN ('published repository files','runtime quantization; no fixed artifact','not applicable')),
+    planning_vram_gb REAL,
+    minimum_compute_capability REAL NOT NULL,
+    requires_native_bf16 INTEGER NOT NULL CHECK(requires_native_bf16 IN (0,1)),
+    four_gpu_strategy TEXT NOT NULL CHECK(four_gpu_strategy IN ('tensor parallel','component sharding','FSDP + sequence parallel','four replicas')),
+    supports_cpu_offload INTEGER NOT NULL CHECK(supports_cpu_offload IN (0,1)),
+    source_url TEXT NOT NULL,
+    notes TEXT NOT NULL,
+    UNIQUE(model_id, precision)
+  );
+
+  CREATE TABLE IF NOT EXISTS four_gpu_cluster_profiles (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    architecture TEXT NOT NULL,
+    gpu_count INTEGER NOT NULL CHECK(gpu_count = 4),
+    vram_per_gpu_gb REAL NOT NULL,
+    total_vram_gb REAL NOT NULL,
+    compute_capability REAL NOT NULL,
+    native_bf16 INTEGER NOT NULL CHECK(native_bf16 IN (0,1)),
+    fabric TEXT NOT NULL,
+    source_url TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS four_gpu_model_compatibility (
+    model_id TEXT NOT NULL REFERENCES ai_models(id) ON DELETE CASCADE,
+    format_id TEXT NOT NULL REFERENCES ai_model_formats(id) ON DELETE CASCADE,
+    cluster_id TEXT NOT NULL REFERENCES four_gpu_cluster_profiles(id) ON DELETE CASCADE,
+    status TEXT NOT NULL CHECK(status IN ('fits','conditional','unsupported')),
+    usable_vram_per_gpu_gb REAL NOT NULL,
+    usable_cluster_vram_gb REAL NOT NULL,
+    strategy TEXT NOT NULL CHECK(strategy IN ('tensor parallel','component sharding','FSDP + sequence parallel','four replicas')),
+    reason TEXT NOT NULL,
+    PRIMARY KEY(format_id, cluster_id)
+  );
+
   CREATE TABLE IF NOT EXISTS cpu_specs (
     product_id TEXT PRIMARY KEY REFERENCES products(id) ON DELETE CASCADE,
     socket TEXT NOT NULL, cores INTEGER NOT NULL, threads INTEGER NOT NULL,
@@ -196,8 +321,45 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_marketplace_product_date ON marketplace_snapshots(product_id, observed_at DESC);
   CREATE INDEX IF NOT EXISTS idx_marketplace_listing_product ON marketplace_listings(product_id, observed_at DESC, amount_cents);
   CREATE INDEX IF NOT EXISTS idx_llm_profile_generation ON llm_benchmark_results(profile_key, generated_tokens_per_second DESC);
+  CREATE INDEX IF NOT EXISTS idx_hashcat_luks2_rate ON hashcat_luks2_results(profile_key, guesses_per_second DESC);
+  CREATE INDEX IF NOT EXISTS idx_hashcat_argon2_rate ON hashcat_argon2_results(profile_key, hashes_per_second DESC);
+  CREATE INDEX IF NOT EXISTS idx_ai_models_modality ON ai_models(modality, name);
+  CREATE INDEX IF NOT EXISTS idx_ai_model_formats_precision ON ai_model_formats(precision, available, model_id);
+  CREATE INDEX IF NOT EXISTS idx_four_gpu_compatibility ON four_gpu_model_compatibility(cluster_id, status, format_id);
   CREATE INDEX IF NOT EXISTS idx_server_optane_capacity ON server_systems(optane_series, max_optane_gb);
 `);
+
+const argon2TableDefinition = db.prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'hashcat_argon2_results'").get() as { sql: string } | undefined;
+if (argon2TableDefinition && !argon2TableDefinition.sql.includes('measured-public-cluster')) {
+  // This table is fully regenerated from versioned seed data below. Rebuild only
+  // the exact materialized table when an older evidence CHECK is installed.
+  db.exec(`
+    DROP INDEX IF EXISTS idx_hashcat_argon2_rate;
+    DROP TABLE hashcat_argon2_results;
+    CREATE TABLE hashcat_argon2_results (
+      product_id TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+      profile_key TEXT NOT NULL,
+      hashcat_mode INTEGER NOT NULL CHECK(hashcat_mode = 34000),
+      profile_name TEXT NOT NULL,
+      memory_kib INTEGER NOT NULL,
+      time_cost INTEGER NOT NULL,
+      parallelism INTEGER NOT NULL,
+      hashes_per_second REAL NOT NULL CHECK(hashes_per_second > 0),
+      evidence TEXT NOT NULL CHECK(evidence IN ('measured-public','measured-public-cluster','measured-local','hardware-qualified-cluster','bandwidth-model')),
+      uncertainty_percent REAL NOT NULL DEFAULT 0,
+      benchmark_hardware TEXT NOT NULL,
+      hashcat_version TEXT NOT NULL,
+      source_name TEXT NOT NULL,
+      source_url TEXT NOT NULL,
+      method_source_url TEXT,
+      profile_source_url TEXT NOT NULL,
+      observed_at TEXT NOT NULL,
+      notes TEXT NOT NULL,
+      PRIMARY KEY(product_id, profile_key)
+    );
+    CREATE INDEX idx_hashcat_argon2_rate ON hashcat_argon2_results(profile_key, hashes_per_second DESC);
+  `);
+}
 
 const motherboardColumns = db.prepare("PRAGMA table_info('motherboard_specs')").all() as Array<{ name: string }>;
 if (!motherboardColumns.some((column) => column.name === 'extra_json')) {
@@ -508,6 +670,120 @@ function seedLlmBenchmark(result: LlmBenchmarkSeed) {
       result.sourceUrl, result.sourceDeviceName, result.observedAt, result.notes);
 }
 
+function seedArgon2Benchmark(result: Argon2BenchmarkSeed) {
+  db.prepare(`INSERT INTO hashcat_argon2_results
+    (product_id, profile_key, hashcat_mode, profile_name, memory_kib, time_cost,
+     parallelism, hashes_per_second, evidence, uncertainty_percent, benchmark_hardware,
+     hashcat_version, source_name, source_url, method_source_url, profile_source_url,
+     observed_at, notes)
+    VALUES (?, 'argon2-rfc9106-mode-34000', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(product_id, profile_key) DO UPDATE SET
+      hashcat_mode = excluded.hashcat_mode, profile_name = excluded.profile_name,
+      memory_kib = excluded.memory_kib, time_cost = excluded.time_cost,
+      parallelism = excluded.parallelism, hashes_per_second = excluded.hashes_per_second,
+      evidence = excluded.evidence, uncertainty_percent = excluded.uncertainty_percent,
+      benchmark_hardware = excluded.benchmark_hardware, hashcat_version = excluded.hashcat_version,
+      source_name = excluded.source_name, source_url = excluded.source_url,
+      method_source_url = excluded.method_source_url, profile_source_url = excluded.profile_source_url,
+      observed_at = excluded.observed_at, notes = excluded.notes`)
+    .run(result.productId, argon2Profile.mode, argon2Profile.name,
+      argon2Profile.memoryKib, argon2Profile.timeCost, argon2Profile.parallelism,
+      result.hashesPerSecond, result.evidence, result.uncertaintyPercent,
+      result.benchmarkHardware, result.hashcatVersion, result.sourceName, result.sourceUrl,
+      result.methodSourceUrl ?? null, argon2Profile.sourceUrl, argon2ResearchDate,
+      result.rationale);
+}
+
+function seedTailsLuks2Benchmark(result: TailsLuks2BenchmarkSeed) {
+  db.prepare(`INSERT INTO hashcat_luks2_results
+    (product_id, profile_key, hashcat_mode, profile_name, memory_kib, time_cost,
+     parallelism, iterations_shown, guesses_per_second, rfc_argon2_hs, evidence,
+     uncertainty_percent, sample_count, reported_spread_hs, benchmark_hardware,
+     hashcat_version, source_name, source_url, profile_source_url, tails_source_url,
+     observed_at, notes)
+    VALUES (?, 'tails-luks2-mode-34100', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(product_id, profile_key) DO UPDATE SET
+      hashcat_mode = excluded.hashcat_mode, profile_name = excluded.profile_name,
+      memory_kib = excluded.memory_kib, time_cost = excluded.time_cost,
+      parallelism = excluded.parallelism, iterations_shown = excluded.iterations_shown,
+      guesses_per_second = excluded.guesses_per_second, rfc_argon2_hs = excluded.rfc_argon2_hs,
+      evidence = excluded.evidence, uncertainty_percent = excluded.uncertainty_percent,
+      sample_count = excluded.sample_count, reported_spread_hs = excluded.reported_spread_hs,
+      benchmark_hardware = excluded.benchmark_hardware, hashcat_version = excluded.hashcat_version,
+      source_name = excluded.source_name, source_url = excluded.source_url,
+      profile_source_url = excluded.profile_source_url, tails_source_url = excluded.tails_source_url,
+      observed_at = excluded.observed_at, notes = excluded.notes`)
+    .run(result.productId, tailsLuks2Profile.mode, tailsLuks2Profile.name,
+      tailsLuks2Profile.memoryKib, tailsLuks2Profile.timeCost, tailsLuks2Profile.parallelism,
+      tailsLuks2Profile.iterationsShownByHashcat, result.guessesPerSecond,
+      result.rfcArgon2Hs ?? null, result.evidence, result.uncertaintyPercent,
+      result.sampleCount ?? null, result.reportedSpreadHs ?? null, result.benchmarkHardware,
+      result.hashcatVersion, result.sourceName, result.sourceUrl, tailsLuks2Profile.sourceUrl,
+      tailsLuks2Profile.tailsSourceUrl, tailsLuks2ResearchDate, result.rationale);
+}
+
+function seedAiModel(model: AiModelProfile) {
+  db.prepare(`INSERT INTO ai_models
+    (id, name, modality, parameter_count_b, tasks_json, native_precision, source_url, notes, observed_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(id) DO UPDATE SET name = excluded.name, modality = excluded.modality,
+      parameter_count_b = excluded.parameter_count_b, tasks_json = excluded.tasks_json,
+      native_precision = excluded.native_precision, source_url = excluded.source_url,
+      notes = excluded.notes, observed_at = excluded.observed_at`)
+    .run(model.id, model.name, model.modality, model.parameterCountB,
+      JSON.stringify(model.tasks), model.nativePrecision, model.sourceUrl, model.notes,
+      modelSupportCatalog.meta.observedAt);
+}
+
+function seedAiModelFormat(format: AiModelFormat) {
+  db.prepare(`INSERT INTO ai_model_formats
+    (id, model_id, precision, format, availability, available, runtime, weight_payload_gb,
+     payload_basis, planning_vram_gb, minimum_compute_capability, requires_native_bf16,
+     four_gpu_strategy, supports_cpu_offload, source_url, notes)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(id) DO UPDATE SET model_id = excluded.model_id, precision = excluded.precision,
+      format = excluded.format, availability = excluded.availability, available = excluded.available,
+      runtime = excluded.runtime, weight_payload_gb = excluded.weight_payload_gb,
+      payload_basis = excluded.payload_basis, planning_vram_gb = excluded.planning_vram_gb,
+      minimum_compute_capability = excluded.minimum_compute_capability,
+      requires_native_bf16 = excluded.requires_native_bf16,
+      four_gpu_strategy = excluded.four_gpu_strategy,
+      supports_cpu_offload = excluded.supports_cpu_offload,
+      source_url = excluded.source_url, notes = excluded.notes`)
+    .run(format.id, format.modelId, format.precision, format.format, format.availability,
+      Number(format.available), format.runtime, format.weightPayloadGb, format.payloadBasis,
+      format.planningVramGb, format.minimumComputeCapability, Number(format.requiresNativeBf16),
+      format.fourGpuStrategy, Number(format.supportsCpuOffload), format.sourceUrl, format.notes);
+}
+
+function seedFourGpuCluster(cluster: FourGpuModelCluster) {
+  db.prepare(`INSERT INTO four_gpu_cluster_profiles
+    (id, name, architecture, gpu_count, vram_per_gpu_gb, total_vram_gb,
+     compute_capability, native_bf16, fabric, source_url)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(id) DO UPDATE SET name = excluded.name, architecture = excluded.architecture,
+      gpu_count = excluded.gpu_count, vram_per_gpu_gb = excluded.vram_per_gpu_gb,
+      total_vram_gb = excluded.total_vram_gb, compute_capability = excluded.compute_capability,
+      native_bf16 = excluded.native_bf16, fabric = excluded.fabric,
+      source_url = excluded.source_url`)
+    .run(cluster.id, cluster.name, cluster.architecture, cluster.gpuCount,
+      cluster.vramPerGpuGb, cluster.totalVramGb, cluster.computeCapability,
+      Number(cluster.nativeBf16), cluster.fabric, cluster.sourceUrl);
+}
+
+function seedFourGpuCompatibility(result: FourGpuModelCompatibility) {
+  db.prepare(`INSERT INTO four_gpu_model_compatibility
+    (model_id, format_id, cluster_id, status, usable_vram_per_gpu_gb,
+     usable_cluster_vram_gb, strategy, reason)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(format_id, cluster_id) DO UPDATE SET model_id = excluded.model_id,
+      status = excluded.status, usable_vram_per_gpu_gb = excluded.usable_vram_per_gpu_gb,
+      usable_cluster_vram_gb = excluded.usable_cluster_vram_gb,
+      strategy = excluded.strategy, reason = excluded.reason`)
+    .run(result.modelId, result.formatId, result.clusterId, result.status,
+      result.usableVramPerGpuGb, result.usableClusterVramGb, result.strategy, result.reason);
+}
+
 db.exec('BEGIN');
 try {
   const catalogProductIds = new Set(allProducts.map((product) => product.id));
@@ -524,6 +800,18 @@ try {
   benchmarkSeeds.filter((result) => catalogProductIds.has(result.productId)).forEach(seedBenchmark);
   ebayUsedMarketSeeds.filter((snapshot) => catalogProductIds.has(snapshot.productId)).forEach(seedEbayMarket);
   llmBenchmarkSeeds.filter((result) => catalogProductIds.has(result.productId)).forEach(seedLlmBenchmark);
+  db.prepare("DELETE FROM hashcat_argon2_results WHERE profile_key = 'argon2-rfc9106-mode-34000'").run();
+  argon2BenchmarkSeeds.filter((result) => catalogProductIds.has(result.productId)).forEach(seedArgon2Benchmark);
+  db.prepare("DELETE FROM hashcat_luks2_results WHERE profile_key = 'tails-luks2-mode-34100'").run();
+  tailsLuks2BenchmarkSeeds.filter((result) => catalogProductIds.has(result.productId)).forEach(seedTailsLuks2Benchmark);
+  db.prepare('DELETE FROM four_gpu_model_compatibility').run();
+  db.prepare('DELETE FROM ai_model_formats').run();
+  db.prepare('DELETE FROM ai_models').run();
+  db.prepare('DELETE FROM four_gpu_cluster_profiles').run();
+  modelSupportCatalog.models.forEach(seedAiModel);
+  modelSupportCatalog.formats.forEach(seedAiModelFormat);
+  modelSupportCatalog.clusters.forEach(seedFourGpuCluster);
+  modelSupportCatalog.compatibility.forEach(seedFourGpuCompatibility);
   db.exec('COMMIT');
 } catch (error) {
   db.exec('ROLLBACK');
@@ -531,6 +819,67 @@ try {
 }
 
 type DbRow = Record<string, string | number | null>;
+
+export function getArgon2DatabaseResults() {
+  return (db.prepare(`SELECT product_id, profile_key, hashcat_mode, profile_name,
+    memory_kib, time_cost, parallelism, hashes_per_second, evidence,
+    uncertainty_percent, benchmark_hardware, hashcat_version, source_name,
+    source_url, method_source_url, profile_source_url, observed_at, notes
+    FROM hashcat_argon2_results
+    ORDER BY hashes_per_second DESC, product_id`).all() as DbRow[]).map((row) => ({
+    productId: row.product_id as string,
+    profileKey: row.profile_key as string,
+    hashcatMode: row.hashcat_mode as number,
+    profileName: row.profile_name as string,
+    memoryKib: row.memory_kib as number,
+    timeCost: row.time_cost as number,
+    parallelism: row.parallelism as number,
+    hashesPerSecond: row.hashes_per_second as number,
+    evidence: row.evidence as string,
+    uncertaintyPercent: row.uncertainty_percent as number,
+    benchmarkHardware: row.benchmark_hardware as string,
+    hashcatVersion: row.hashcat_version as string,
+    sourceName: row.source_name as string,
+    sourceUrl: row.source_url as string,
+    methodSourceUrl: row.method_source_url as string | null,
+    profileSourceUrl: row.profile_source_url as string,
+    observedAt: row.observed_at as string,
+    notes: row.notes as string,
+  }));
+}
+
+export function getTailsLuks2DatabaseResults() {
+  return (db.prepare(`SELECT product_id, profile_key, hashcat_mode, profile_name,
+    memory_kib, time_cost, parallelism, iterations_shown, guesses_per_second,
+    rfc_argon2_hs, evidence, uncertainty_percent, sample_count, reported_spread_hs,
+    benchmark_hardware, hashcat_version, source_name, source_url, profile_source_url,
+    tails_source_url, observed_at, notes
+    FROM hashcat_luks2_results
+    ORDER BY guesses_per_second DESC, product_id`).all() as DbRow[]).map((row) => ({
+    productId: row.product_id as string,
+    profileKey: row.profile_key as string,
+    hashcatMode: row.hashcat_mode as number,
+    profileName: row.profile_name as string,
+    memoryKib: row.memory_kib as number,
+    timeCost: row.time_cost as number,
+    parallelism: row.parallelism as number,
+    iterationsShown: row.iterations_shown as number,
+    guessesPerSecond: row.guesses_per_second as number,
+    rfcArgon2Hs: row.rfc_argon2_hs as number | null,
+    evidence: row.evidence as string,
+    uncertaintyPercent: row.uncertainty_percent as number,
+    sampleCount: row.sample_count as number | null,
+    reportedSpreadHs: row.reported_spread_hs as number | null,
+    benchmarkHardware: row.benchmark_hardware as string,
+    hashcatVersion: row.hashcat_version as string,
+    sourceName: row.source_name as string,
+    sourceUrl: row.source_url as string,
+    profileSourceUrl: row.profile_source_url as string,
+    tailsSourceUrl: row.tails_source_url as string,
+    observedAt: row.observed_at as string,
+    notes: row.notes as string,
+  }));
+}
 
 function baseFromRow(row: DbRow) {
   return {
@@ -732,6 +1081,69 @@ export function getProducts(): Product[] {
   });
 
   return [...products, ...servers];
+}
+
+export function getAiModelCompatibilityCatalog(): AiModelCompatibilityCatalog {
+  const models = (db.prepare('SELECT * FROM ai_models ORDER BY modality, name').all() as DbRow[]).map((row) => ({
+    id: row.id as string,
+    name: row.name as string,
+    modality: row.modality as AiModelProfile['modality'],
+    parameterCountB: row.parameter_count_b as number | null,
+    tasks: JSON.parse(row.tasks_json as string) as string[],
+    nativePrecision: row.native_precision as AiModelProfile['nativePrecision'],
+    sourceUrl: row.source_url as string,
+    notes: row.notes as string,
+  }));
+  const formats = (db.prepare('SELECT * FROM ai_model_formats ORDER BY model_id, CASE precision WHEN \'Q4\' THEN 1 WHEN \'Q8\' THEN 2 WHEN \'FP16\' THEN 3 ELSE 4 END').all() as DbRow[]).map((row) => ({
+    id: row.id as string,
+    modelId: row.model_id as string,
+    precision: row.precision as AiModelFormat['precision'],
+    format: row.format as string,
+    availability: row.availability as AiModelFormat['availability'],
+    available: Boolean(row.available),
+    runtime: row.runtime as string,
+    weightPayloadGb: row.weight_payload_gb as number | null,
+    payloadBasis: row.payload_basis as AiModelFormat['payloadBasis'],
+    planningVramGb: row.planning_vram_gb as number | null,
+    minimumComputeCapability: row.minimum_compute_capability as number,
+    requiresNativeBf16: Boolean(row.requires_native_bf16),
+    fourGpuStrategy: row.four_gpu_strategy as AiModelFormat['fourGpuStrategy'],
+    supportsCpuOffload: Boolean(row.supports_cpu_offload),
+    sourceUrl: row.source_url as string,
+    notes: row.notes as string,
+  }));
+  const clusters = (db.prepare('SELECT * FROM four_gpu_cluster_profiles ORDER BY total_vram_gb, name').all() as DbRow[]).map((row) => ({
+    id: row.id as string,
+    name: row.name as string,
+    architecture: row.architecture as string,
+    gpuCount: row.gpu_count as 4,
+    vramPerGpuGb: row.vram_per_gpu_gb as number,
+    totalVramGb: row.total_vram_gb as number,
+    computeCapability: row.compute_capability as number,
+    nativeBf16: Boolean(row.native_bf16),
+    fabric: row.fabric as string,
+    sourceUrl: row.source_url as string,
+  }));
+  const compatibility = (db.prepare('SELECT * FROM four_gpu_model_compatibility ORDER BY cluster_id, model_id, format_id').all() as DbRow[]).map((row) => ({
+    modelId: row.model_id as string,
+    formatId: row.format_id as string,
+    clusterId: row.cluster_id as string,
+    status: row.status as FourGpuModelCompatibility['status'],
+    usableVramPerGpuGb: row.usable_vram_per_gpu_gb as number,
+    usableClusterVramGb: row.usable_cluster_vram_gb as number,
+    strategy: row.strategy as FourGpuModelCompatibility['strategy'],
+    reason: row.reason as string,
+  }));
+  return {
+    models, formats, clusters, compatibility,
+    meta: {
+      ...modelSupportCatalog.meta,
+      modelCount: models.length,
+      formatCount: formats.length,
+      clusterCount: clusters.length,
+      compatibilityCount: compatibility.length,
+    },
+  };
 }
 
 export const dbInfo = { path: databasePath };

@@ -3,6 +3,7 @@ import {
   PlugZap, Search, Server, ShieldAlert, Trophy, Zap,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { ModelFormatCompatibility } from './ModelFormatCompatibility';
 import {
   assessHouseOutlet, dgxSparkCapacityProof, dgxSparkCurrentAudit, dgxSparkTensorParallelResults,
   clusterRawComputeById, clusterRawComputeRows, clusterSystemCostById, enterpriseClusters, enterpriseGenerations, fourGpuPcieClusters,
@@ -266,6 +267,8 @@ export function EnterpriseClusters() {
 
         <footer><ShieldAlert /><p><strong>Do not read the Q4 number as a promised benchmark.</strong> It assumes perfect weight streaming, ideal sharding or replica scheduling, no KV-cache traffic, no kernel overhead, and no fabric stalls. SuperPOD values are aggregate capacity across concurrently scheduled model instances—not single-request decode. *GB10 and RTX PRO 5000 dense FP16 are normalized from NVIDIA’s sparse FP4 peak by removing 2× sparsity and the 4× precision-rate advantage; every other dense FP16 value is directly published.</p><a href="https://huggingface.co/TheBloke/Llama-2-70B-GGUF/blob/main/README.md" target="_blank" rel="noreferrer">38.87GB model source <ExternalLink /></a></footer>
       </section>
+
+      <ModelFormatCompatibility />
 
       <section className="cluster-pcie-lab">
         <header>

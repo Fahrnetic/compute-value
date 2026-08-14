@@ -63,7 +63,7 @@ export function Builder({ products, selection, validation, compatibleIds, onSele
         <div>
           <span className="section-kicker">GUIDED CONFIGURATOR / 01</span>
           <h1>Build with certainty.</h1>
-          <p>Choose real parts. Forge checks socket, memory generation, capacity, slots, PCIe, power, and physical follow-ups as you go.</p>
+          <p>Choose real parts. Compute Value checks socket, memory generation, capacity, slots, PCIe, power, and physical follow-ups as you go.</p>
         </div>
         <div className="intro-stat">
           <ShieldCheck />
@@ -99,9 +99,9 @@ export function Builder({ products, selection, validation, compatibleIds, onSele
             <div className="result-count"><strong>{candidates.length}</strong><span>matching parts</span></div>
           </div>
           <div className="picker-toolbar">
-            <label className="search-field"><Search size={17} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={`Search ${categorySingular[activeCategory].toLowerCase()}s`} /></label>
+            <label className="search-field"><Search size={17} /><input name="builder-search" aria-label={`Search ${categorySingular[activeCategory].toLowerCase()}s`} value={search} onChange={(event) => setSearch(event.target.value)} placeholder={`Search ${categorySingular[activeCategory].toLowerCase()}s`} /></label>
             <label className="compatibility-toggle">
-              <input type="checkbox" checked={compatibleOnly} onChange={(event) => setCompatibleOnly(event.target.checked)} />
+              <input name="compatible-only" type="checkbox" checked={compatibleOnly} onChange={(event) => setCompatibleOnly(event.target.checked)} />
               <span className="toggle-track"><i /></span>
               Compatible only
             </label>

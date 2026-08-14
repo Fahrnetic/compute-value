@@ -1,3 +1,4 @@
+import type { AiModelCompatibilityCatalog } from '../data/model-format-support';
 import type { BuildSelection, CatalogResponse, ValidationResult } from '../types';
 
 async function json<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T> {
@@ -22,4 +23,8 @@ export function fetchCompatible(selection: BuildSelection) {
   const params = new URLSearchParams();
   Object.entries(selection).forEach(([key, value]) => value && params.set(key, value));
   return json<{ compatibleIds: Record<string, string[]>; validation: ValidationResult }>(`/api/compatible?${params}`);
+}
+
+export function fetchAiModelCompatibility() {
+  return json<AiModelCompatibilityCatalog>('/api/ai-model-compatibility');
 }

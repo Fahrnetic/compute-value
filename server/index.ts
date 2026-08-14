@@ -5,7 +5,14 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { BuildSelection, BuilderCategory, CatalogResponse, Category } from '../src/types.js';
 import { compatibleIdsFor, validateBuild } from './compatibility.js';
-import { db, dbInfo, getProducts } from './database.js';
+import {
+  db,
+  dbInfo,
+  getAiModelCompatibilityCatalog,
+  getArgon2DatabaseResults,
+  getProducts,
+  getTailsLuks2DatabaseResults,
+} from './database.js';
 
 const app = express();
 const port = Number(process.env.PORT ?? 4174);
@@ -56,6 +63,60 @@ app.get('/api/catalog', (request, response) => {
     },
   };
   response.json(payload);
+});
+
+app.get('/api/ai-model-compatibility', (request, response) => {
+  const modality = typeof request.query.modality === 'string' ? request.query.modality : '';
+  const precision = typeof request.query.precision === 'string' ? request.query.precision : '';
+  const clusterId = typeof request.query.cluster === 'string' ? request.query.cluster : '';
+  const catalog = getAiModelCompatibilityCatalog();
+  const models = modality ? catalog.models.filter((model) => model.modality === modality) : catalog.models;
+  const modelIds = new Set(models.map((model) => model.id));
+  const formats = catalog.formats.filter((format) => (
+    modelIds.has(format.modelId) && (!precision || format.precision === precision)
+  ));
+  const formatIds = new Set(formats.map((format) => format.id));
+  const clusters = clusterId ? catalog.clusters.filter((cluster) => cluster.id === clusterId) : catalog.clusters;
+  const clusterIds = new Set(clusters.map((cluster) => cluster.id));
+  const compatibility = catalog.compatibility.filter((result) => (
+    formatIds.has(result.formatId) && clusterIds.has(result.clusterId)
+  ));
+  response.json({
+    models, formats, clusters, compatibility,
+    meta: {
+      ...catalog.meta,
+      modelCount: models.length,
+      formatCount: formats.length,
+      clusterCount: clusters.length,
+      compatibilityCount: compatibility.length,
+    },
+  });
+});
+
+app.get('/api/hashcat-argon2', (_request, response) => {
+  const results = getArgon2DatabaseResults();
+  response.json({
+    results,
+    meta: {
+      profileKey: 'argon2-rfc9106-mode-34000',
+      resultCount: results.length,
+      measuredCount: results.filter((result) => result.evidence !== 'bandwidth-model').length,
+      modeledCount: results.filter((result) => result.evidence === 'bandwidth-model').length,
+    },
+  });
+});
+
+app.get('/api/hashcat-luks2', (_request, response) => {
+  const results = getTailsLuks2DatabaseResults();
+  response.json({
+    results,
+    meta: {
+      profileKey: 'tails-luks2-mode-34100',
+      resultCount: results.length,
+      directOrMeanCount: results.filter((result) => result.evidence !== 'hardware-qualified').length,
+      hardwareQualifiedCount: results.filter((result) => result.evidence === 'hardware-qualified').length,
+    },
+  });
 });
 
 app.post('/api/validate', (request, response) => {

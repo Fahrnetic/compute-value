@@ -1,5 +1,5 @@
 import { Database, Filter, Search, SlidersHorizontal, X } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { type CSSProperties, useMemo, useState } from 'react';
 import type { Category, Product } from '../types';
 import { categoryLabels } from '../lib/format';
 import { ProductCard } from './ProductCard';
@@ -60,12 +60,25 @@ export function Catalog({ products, lastUpdated, benchmarkMeta }: {
     + Number(maxPrice < 12000) + Number(manufacturer !== 'all') + Number(gpuSegment !== 'all')
     + Number(minimumVram > 0) + Number(benchmarkCoverage !== 'all') + Number(optaneCpu !== 'all');
   const reset = () => { setCategory('all'); setMemory('all'); setSocket('all'); setMaxPrice(12000); setManufacturer('all'); setGpuSegment('all'); setMinimumVram(0); setBenchmarkCoverage('all'); setOptaneCpu('all'); setSearch(''); };
+  const categoryCount = (item: Category) => desktopProducts.filter((product) => product.category === item).length;
+  const benchmarkCoveragePercent = Math.round((benchmarkMeta.products / Math.max(desktopProducts.length, 1)) * 100);
 
   return (
     <main className="catalog-page">
       <section className="page-hero catalog-hero">
-        <div><span className="section-kicker">STRUCTURED HARDWARE DATA / 02</span><h1>Parts, without the guesswork.</h1><p>Browse normalized specifications, dated reference prices, and sourced CPU and GPU benchmark results.</p></div>
+        <div><span className="section-kicker">STRUCTURED HARDWARE DATA / 02</span><h1>Find the hardware that fits the work.</h1><p>Browse normalized specifications, dated reference prices, and sourced performance evidence. Every card keeps capacity, speed, cost, power, and confidence in view.</p></div>
         <div className="database-stamp"><Database /><strong>{desktopProducts.length}</strong><span>catalog parts<br />updated {lastUpdated}</span></div>
+      </section>
+      <section className="catalog-overview" aria-label="Catalog coverage">
+        {categories.map((item) => (
+          <button key={item} className={category === item ? 'active' : ''} onClick={() => setCategory(category === item ? 'all' : item)}>
+            <span>{categoryLabels[item]}</span><strong>{categoryCount(item)}</strong><small>records</small>
+          </button>
+        ))}
+        <div className="catalog-overview__coverage">
+          <span>Benchmark coverage</span><strong>{benchmarkMeta.results}</strong><small>{benchmarkCoveragePercent}% of catalog products represented</small>
+          <i style={{ '--coverage': `${Math.min(benchmarkCoveragePercent, 100)}%` } as CSSProperties} />
+        </div>
       </section>
       <div className="catalog-toolbar">
         <label className="search-field large"><Search /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search model, maker, chipset, feature…" />{search && <button onClick={() => setSearch('')}><X /></button>}</label>
@@ -76,7 +89,7 @@ export function Catalog({ products, lastUpdated, benchmarkMeta }: {
           <div className="filter-title"><span><Filter /> FILTERS</span>{activeFilterCount > 0 && <button onClick={reset}>Reset all</button>}</div>
           <fieldset><legend>Category</legend>
             <label><input type="radio" checked={category === 'all'} onChange={() => setCategory('all')} /> All parts <b>{desktopProducts.length}</b></label>
-            {categories.map((item) => <label key={item}><input type="radio" checked={category === item} onChange={() => setCategory(item)} /> {categoryLabels[item]} <b>{desktopProducts.filter((p) => p.category === item).length}</b></label>)}
+            {categories.map((item) => <label key={item}><input type="radio" checked={category === item} onChange={() => setCategory(item)} /> {categoryLabels[item]} <b>{categoryCount(item)}</b></label>)}
           </fieldset>
           <fieldset><legend>Memory generation</legend>
             {(['all', 'DDR4', 'DDR5'] as const).map((item) => <label key={item}><input type="radio" checked={memory === item} onChange={() => setMemory(item)} /> {item === 'all' ? 'Any memory' : item}</label>)}
@@ -90,7 +103,7 @@ export function Catalog({ products, lastUpdated, benchmarkMeta }: {
           <fieldset><legend>Maximum reference price</legend><div className="range-value">Up to <strong>${maxPrice.toLocaleString()}</strong></div><input className="price-range" type="range" min="100" max="12000" step="100" value={maxPrice} onChange={(event) => setMaxPrice(Number(event.target.value))} /></fieldset>
         </aside>
         <section className="catalog-results">
-          <div className="results-heading"><div><strong>{filtered.length}</strong> results</div><span>{benchmarkMeta.results} sourced scores across {benchmarkMeta.products} products · benchmark snapshot {benchmarkMeta.lastUpdated} · USD price references</span></div>
+          <div className="results-heading"><div><strong>{filtered.length}</strong><span>matching records</span></div><span>{activeFilterCount > 0 ? `${activeFilterCount} active filters` : 'Complete catalog'} · {benchmarkMeta.results} sourced scores · snapshot {benchmarkMeta.lastUpdated} · USD references</span></div>
           <div className="catalog-grid">{filtered.map((product) => <ProductCard key={product.id} product={product} />)}</div>
           {filtered.length === 0 && <div className="empty-state"><Search /><h3>No hardware matches</h3><p>Try widening the price or compatibility filters.</p><button onClick={reset}>Reset filters</button></div>}
         </section>

@@ -6,11 +6,11 @@ describe('price-adjusted individual GPU score', () => {
   const scores = scorePriceAdjustedGpus(getProducts());
 
   it('scores only exact-control individual cards with a market price', () => {
-    expect(scores).toHaveLength(14);
+    expect(scores).toHaveLength(15);
     expect(scores.every(({ product, priceRange }) => product.category === 'gpu' && priceRange.lowCents > 0)).toBe(true);
     expect(scores.every(({ addressableVramGb }) => addressableVramGb >= 24)).toBe(true);
     expect(scores.some(({ product }) => product.id === 'nvidia-h200-nvl')).toBe(false);
-    expect(scores.some(({ product }) => product.id === 'nvidia-rtx-4090')).toBe(false);
+    expect(scores.some(({ product }) => product.id === 'nvidia-rtx-4090')).toBe(true);
     expect(scores.some(({ product }) => product.id === 'nvidia-rtx-4070-super')).toBe(false);
   });
 

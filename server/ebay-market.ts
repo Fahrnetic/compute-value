@@ -242,7 +242,13 @@ const ebayUsedMarketResearch: EbayUsedMarketSeed[] = [
       listing('Colorful iGame GeForce RTX 4090 D 24GB Vulcan W GPU GDDR6X Graphics Card', 3115.46, 'sinobright', 99.8, 22200, '186373055240'),
     ],
   },
-  { productId: 'nvidia-rtx-4090', observedAt, searchUrl: search('NVIDIA GeForce RTX 4090 Founders Edition 24GB used'), listings: [] },
+  {
+    productId: 'nvidia-rtx-4090', observedAt: '2026-08-13', searchUrl: search('NVIDIA GeForce RTX 4090 Founders Edition 24GB used'), listings: [
+      listing('NVIDIA GeForce RTX 4090 FOUNDERS EDITION 24GB PG136D GDDR6X 900-1G136-2530 GPU', 2499.99, 'surpluserecycle', 99.4, 8823, '336439993912'),
+      listing('NVIDIA GeForce RTX 4090 Founders Edition 24GB GDDR6X Graphics Card, Original Box', 2950, 'declutter depot', 98.8, 1303, '227322459967'),
+      listing('NVIDIA GeForce RTX 4090 Founders Edition Video Graphics Card 24GB GDDR6X GPU', 4100, 'plusboards', 99.7, 3203, '306427254613'),
+    ],
+  },
   {
     productId: 'nvidia-rtx-5880-ada', observedAt: '2026-08-12', searchUrl: search('NVIDIA RTX 5880 Ada 48GB GPU used'), listings: [
       listing('NVIDIA RTX 5880 ADA Gen 48GB', 4299.95, 'Estradas PC Hardware', 99.8, 5746, '157854479712'),
