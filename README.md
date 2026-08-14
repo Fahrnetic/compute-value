@@ -83,7 +83,7 @@ The builder now starts with the workload and exact model profile, then audits a 
 - Complete hardware cost with already-owned parts excluded.
 - Shareable builds, JSON export, simple guidance, and an advanced evidence view.
 
-Read the **[AI Homelab Field Guide](docs/AI-HOMELAB-GUIDE.md)** or the **[Benchmark Contribution Contract](docs/BENCHMARK-CONTRIBUTION.md)**.
+Read the **[AI Homelab Field Guide](docs/AI-HOMELAB-GUIDE.md)**, the **[Hardware Documentation Audit](docs/HARDWARE-DOCUMENTATION-AUDIT.md)**, or the **[Benchmark Contribution Contract](docs/BENCHMARK-CONTRIBUTION.md)**.
 
 ### Workload research included
 
@@ -148,6 +148,7 @@ compute-value/
 ├── docs/
 │   ├── SCORING-AND-DATA.md     formulas, evidence rules, reproducibility
 │   ├── AI-HOMELAB-GUIDE.md     model-to-system planning guide
+│   ├── HARDWARE-DOCUMENTATION-AUDIT.md source and required-field coverage
 │   └── BENCHMARK-CONTRIBUTION.md reproducible submission contract
 ├── scripts/                    repeatable research helpers
 └── data/pc-builder.sqlite      generated local database; never published
@@ -177,6 +178,12 @@ npm start
 ```
 
 Open **http://localhost:4174**.
+
+To verify that every catalog record has the category-specific specifications needed for homelab planning:
+
+```bash
+npm run audit:docs
+```
 
 ### Verification
 

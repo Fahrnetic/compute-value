@@ -29,9 +29,9 @@ describe('homelab v2 planning engine', () => {
     const purchaseAudit = auditHomelabBuild(completeBuild, products);
     const ownedAudit = auditHomelabBuild({ ...completeBuild, ownedProductIds: ['nvidia-rtx-3090'] }, products);
 
-    expect(purchaseAudit.status).toBe('works-with-limitations');
+    expect(purchaseAudit.status).toBe('works');
     expect(purchaseAudit.checks.every((check) => check.status !== 'fail')).toBe(true);
-    expect(purchaseAudit.checks).toContainEqual(expect.objectContaining({ code: 'pcie-lanes', status: 'unknown' }));
+    expect(purchaseAudit.checks).toContainEqual(expect.objectContaining({ code: 'pcie-lanes', status: 'pass' }));
     expect(purchaseAudit.modelFit.status).toBe('fits-accelerator');
     expect(purchaseAudit.power.outletVerdict).toBe('ordinary-outlet');
     expect(purchaseAudit.totalCents - ownedAudit.totalCents).toBe(completeGpuPrice());

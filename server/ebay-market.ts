@@ -348,6 +348,8 @@ const ebayUsedMarketResearch: EbayUsedMarketSeed[] = [
   { productId: 'amd-radeon-ai-pro-r9600d', observedAt, searchUrl: search('AMD Radeon AI PRO R9600D 32GB GPU used'), listings: [] },
   { productId: 'amd-radeon-ai-pro-r9700', observedAt, searchUrl: search('AMD Radeon AI PRO R9700 32GB GPU used'), listings: [] },
   { productId: 'amd-radeon-ai-pro-r9700s', observedAt, searchUrl: search('AMD Radeon AI PRO R9700S 32GB GPU used'), listings: [] },
+  { productId: 'amd-rx-9070', observedAt, searchUrl: search('AMD Radeon RX 9070 16GB GPU used'), listings: [] },
+  { productId: 'amd-rx-9070-xt', observedAt, searchUrl: search('AMD Radeon RX 9070 XT 16GB GPU used'), listings: [] },
   { productId: 'nvidia-a10', observedAt, searchUrl: search('NVIDIA A10 24GB GPU accelerator used'), listings: [] },
   { productId: 'nvidia-rtx-5000-ada', observedAt, searchUrl: search('NVIDIA RTX 5000 Ada 32GB GPU used'), listings: [] },
   {
